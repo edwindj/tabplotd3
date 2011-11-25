@@ -4,7 +4,7 @@ License: GPL version 3
 Title: Tableplot, a visualization of large datasets
 Type: Package
 LazyLoad: yes
-Author: Martijn Tennekes and Edwin de Jonge
+Author: Edwin de Jonge and Martijn Tennekes
 Description: A tableplot is a visualisation of a (large)
     dataset with a dozen of variables, both numeric and
     categorical. Each column represents a variable and each
