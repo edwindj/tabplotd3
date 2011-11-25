@@ -1,0 +1,14 @@
+Package: tabplot3d
+Maintainer: Edwin de Jonge<edwindjonge@gmail.com>
+License: GPL version 3
+Title: Tableplot, a visualization of large datasets
+Type: Package
+LazyLoad: yes
+Author: Martijn Tennekes and Edwin de Jonge
+Description: A tableplot is a visualisation of a (large)
+    dataset with a dozen of variables, both numeric and
+    categorical. Each column represents a variable and each
+Version: 0.1
+URL: http://code.google.com/p/tabplot3d/
+Date: 2011-10-21
+Depends: tabplot
