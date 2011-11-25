@@ -1,4 +1,4 @@
-Package: tabplot3d
+Package: tabplotd3
 Maintainer: Edwin de Jonge<edwindjonge@gmail.com>
 License: GPL version 3
 Title: Tableplot, a visualization of large datasets
@@ -9,6 +9,6 @@ Description: A tableplot is a visualisation of a (large)
     dataset with a dozen of variables, both numeric and
     categorical. Each column represents a variable and each
 Version: 0.1
-URL: http://code.google.com/p/tabplot3d/
+URL: http://code.google.com/p/tabplotd3/
 Date: 2011-10-21
 Depends: tabplot
