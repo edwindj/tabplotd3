@@ -19,18 +19,19 @@ svg {
     <script type="text/javascript">
 
 var data = d3.range(100).map(Math.random);
+var compl = d3.range(100).map(Math.random);
 
-var w = 800,
-    h = 600,
+var w = 430,
+    h = 440,
     x = d3.scale.linear()
-	   .domain([0, 1])
-	   .range([0, w]),
+       .domain([0, 1])
+       .range([0, w]),
     y = d3.scale.ordinal()
-	   .domain(d3.range(data.length))
-	   .rangeBands([0, h]),
-	cl = d3.scale.linear()
-	    .domain([0, 1])
-		.range(["white", "steelblue"]);
+       .domain(d3.range(data.length))
+       .rangeBands([0, h]),
+    z = d3.scale.linear()
+       .domain([0, 1])
+       .range(["white", "steelblue"]);
 
 var vis = d3.select("body")
   .append("svg:svg")
@@ -46,9 +47,17 @@ var bars = vis.selectAll("g.bar")
     .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; });
 
 bars.append("svg:rect")
-    .attr("fill", cl)
+    .attr("fill", function(d,i){return z(compl[i])})
     .attr("width", x)
     .attr("height", y.rangeBand());
+
+bars.append("svg:line")
+    .style("stroke-width", 1)
+    .style("stroke", "steelblue")
+    .attr("x1", x)
+    .attr("x2", x)
+    .attr("y1", 0)
+    .attr("y2", y.rangeBand());
 
 var rules = vis.selectAll("g.rule")
     .data(x.ticks(10))
