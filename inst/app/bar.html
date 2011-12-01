@@ -3,6 +3,7 @@
   <head>
     <title>Bar Chart</title>
     <script type="text/javascript" src="js/d3.min.js"></script>
+    <script type="text/javascript" src="numericvar.js"></script>
     <style type="text/css">
 
 body {
@@ -21,13 +22,6 @@ svg {
 var data = d3.range(100).map(Math.random);
 var compl = d3.range(100).map(Math.random);
 
-var vars;
-
-d3.json("diamonds.json", function(json){
-   vars = json.vars;
-   data = vars.carat.mean;
-   //alert(json.vars.carat.mean);
-});
 
 var w = 430,
     h = 440,
@@ -48,6 +42,20 @@ var vis = d3.select("body")
   .append("svg:g")
     .attr("transform", "translate(20,0)");
 
+var carat;
+
+var svgel = d3.select("svg");
+
+d3.json("diamonds.json", function(json){
+   vars = d3.keys(json.vars);
+   sc_vars = d3.scale.ordinal()
+        .domain(d3.range(vars.length))
+        .rangeBands([0, w]);
+   carat = numvar(json.vars.carat, svgel, sc_vars(1), sc_vars.rangeBand(), y, z);
+   //alert(json.vars.carat.mean);
+});
+
+    
 var bars = vis.selectAll("g.bar")
     .data(data)
   .enter().append("svg:g")
