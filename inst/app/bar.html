@@ -43,6 +43,7 @@ var vis = d3.select("body")
     .attr("transform", "translate(20,0)");
 
 var carat;
+var vars;
 
 var svgel = d3.select("svg");
 
@@ -51,7 +52,13 @@ d3.json("diamonds.json", function(json){
    sc_vars = d3.scale.ordinal()
         .domain(d3.range(vars.length))
         .rangeBands([0, w]);
-   carat = numvar(json.vars.carat, svgel, sc_vars(1), sc_vars.rangeBand(), y, z);
+   for (var i = 0; i < vars.length; i++){
+      v = vars[i];
+	  if (json.vars[v].mean){
+      numvar(json.vars[v], svgel, sc_vars(i), sc_vars.rangeBand(), y, z);
+   }
+   }
+   //carat = numvar(json.vars["carat"], svgel, sc_vars(1), sc_vars.rangeBand(), y, z);
    //alert(json.vars.carat.mean);
 });
 
