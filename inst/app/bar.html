@@ -21,6 +21,14 @@ svg {
 var data = d3.range(100).map(Math.random);
 var compl = d3.range(100).map(Math.random);
 
+var vars;
+
+d3.json("diamonds.json", function(json){
+   vars = json.vars;
+   data = vars.carat.mean;
+   //alert(json.vars.carat.mean);
+});
+
 var w = 430,
     h = 440,
     x = d3.scale.linear()
