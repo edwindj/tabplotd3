@@ -1,5 +1,5 @@
 
-function numvar(data, container, offset, width, sc_bin, sc_complete){
+function numvar(data, container, offset, width, height, sc_bin, sc_complete){
 
 sc_x = d3.scale.linear()
        .domain([0, d3.max(data.mean)])
@@ -12,13 +12,14 @@ var vis = container.append("svg:g")
 vis.append("svg:rect")
    .attr("class", "panel")
    .attr("width", width)
-   .attr("height", sc_bin(99))
-   .style("fill", "silver");
+   .attr("height", height);
+   
 var bars = vis.selectAll("g.bar")
     .data(data.mean)
   .enter().append("svg:g")
     .attr("class", "bar")
     .attr("transform", function(d, i) { return "translate(0," + sc_bin(i) + ")"; });
+    
 bars.append("svg:rect")
     .attr("fill", function(d,i){return sc_complete(data.compl[i])})
     .attr("width", sc_x)
@@ -31,6 +32,17 @@ bars.append("svg:line")
     .attr("x2", sc_x)
     .attr("y1", 0)
     .attr("y2", sc_bin.rangeBand());
-    
+
+var rules = vis.selectAll("g.rule")
+    .data(sc_x.ticks(3))
+  .enter().append("svg:g")
+    .attr("class", "rule")
+    .attr("transform", function(d) { return "translate(" + sc_x(d) + ",0)"; });
+
+rules.append("svg:line")
+    .attr("y1", 0)
+    .attr("y2", h)
+    .attr("stroke", "white")
+    .attr("stroke-opacity", .3);
     return vis;
 }
