@@ -14,6 +14,10 @@ svg {
   shape-rendering: crispEdges;
 }
 
+rect.panel {
+   fill: #F1F1F1;
+}
+
     </style>
   </head>
   <body>
@@ -23,8 +27,8 @@ var data = d3.range(100).map(Math.random);
 var compl = d3.range(100).map(Math.random);
 
 
-var w = 430,
-    h = 440,
+var w = 800,
+    h = 600,
     x = d3.scale.linear()
        .domain([0, 1])
        .range([0, w]),
@@ -49,66 +53,20 @@ var svgel = d3.select("svg");
 
 d3.json("diamonds.json", function(json){
    vars = d3.keys(json.vars);
+   
    sc_vars = d3.scale.ordinal()
         .domain(d3.range(vars.length))
-        .rangeBands([0, w]);
+        .rangeBands([0, w], 0.1);
+   
    for (var i = 0; i < vars.length; i++){
       v = vars[i];
 	  if (json.vars[v].mean){
-      numvar(json.vars[v], svgel, sc_vars(i), sc_vars.rangeBand(), y, z);
-   }
+       numvar(json.vars[v], svgel, sc_vars(i), sc_vars.rangeBand(), h, y, z);
+     }
    }
    //carat = numvar(json.vars["carat"], svgel, sc_vars(1), sc_vars.rangeBand(), y, z);
    //alert(json.vars.carat.mean);
 });
-
-    
-var bars = vis.selectAll("g.bar")
-    .data(data)
-  .enter().append("svg:g")
-    .attr("class", "bar")
-    .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; });
-
-bars.append("svg:rect")
-    .attr("fill", function(d,i){return z(compl[i])})
-    .attr("width", x)
-    .attr("height", y.rangeBand());
-
-bars.append("svg:line")
-    .style("stroke-width", 1)
-    .style("stroke", "steelblue")
-    .attr("x1", x)
-    .attr("x2", x)
-    .attr("y1", 0)
-    .attr("y2", y.rangeBand());
-
-var rules = vis.selectAll("g.rule")
-    .data(x.ticks(10))
-  .enter().append("svg:g")
-    .attr("class", "rule")
-    .attr("transform", function(d) { return "translate(" + x(d) + ",0)"; });
-
-rules.append("svg:line")
-    .attr("y1", h)
-    .attr("y2", h + 6)
-    .attr("stroke", "black");
-
-rules.append("svg:line")
-    .attr("y1", 0)
-    .attr("y2", h)
-    .attr("stroke", "white")
-    .attr("stroke-opacity", .3);
-
-rules.append("svg:text")
-    .attr("y", h + 9)
-    .attr("dy", ".71em")
-    .attr("text-anchor", "middle")
-    .text(x.tickFormat(10));
-
-vis.append("svg:line")
-    .attr("y1", 0)
-    .attr("y2", h)
-    .attr("stroke", "black");
 
     </script>
   </body>
