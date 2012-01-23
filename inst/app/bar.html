@@ -15,6 +15,15 @@ svg {
   shape-rendering: crispEdges;
 }
 
+div.vars {
+  position: relative;
+  height: 10px;
+}
+
+div.label {
+  float: left;
+}
+
 rect.panel {
    fill: #F1F1F1;
 }
@@ -87,12 +96,16 @@ var w = 800,
        .domain([0, 1])
        .range(["white", "steelblue"]);
 
+var names = d3.select("body")
+  .append("div")
+     .attr("class", "vars")
+	   
 var vis = d3.select("body")
   .append("svg:svg")
     .attr("width", w + 40)
-    .attr("height", h + 20)
+    .attr("height", h + 60)
   .append("svg:g")
-    .attr("transform", "translate(20,0)");
+    .attr("transform", "translate(20,40)");
 
 var cut;
 var vars;
@@ -106,15 +119,32 @@ d3.json("diamonds.json", function(json){
         .domain(d3.range(vars.length))
         .rangeBands([0, w], 0.1);
    
+   var labels = vis.select("g.labels")
+      .append("svg:g")
+	     .attr("class", "labels");
+   labels.select("text")
+      .data(vars)
+	  .enter().append("svg:text")
+	  .text(vars);
+	  
+   names.selectAll("div")
+      .data(d3.keys(vars))
+	  .enter().append("div")
+	     .attr("class", "label")
+		 .attr("width", sc_vars.rangeBand())
+		 .attr("left", sc_vars)
+		 .text("test");
+	  
    for (var i = 0; i < vars.length; i++){
      v = vars[i];
 	  if (json.vars[v].mean){
-       numvar(json.vars[v], svg, sc_vars(i), sc_vars.rangeBand(), h, y, z);
+       numvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y, z);
      } else {
        cut = json.vars[v];
-       catvar(json.vars[v], svg, sc_vars(i), sc_vars.rangeBand(), h, y);
+       catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
    }
+   
    //carat = numvar(json.vars["carat"], svgel, sc_vars(1), sc_vars.rangeBand(), y, z);
    //alert(json.vars.carat.mean);
 });
