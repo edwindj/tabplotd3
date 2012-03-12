@@ -40,15 +40,15 @@ $^\star$Contact author: \href{mailto:e.dejonge@cbs.nl}{e.dejonge@cbs.nl}\\
 
 \vskip 0.8cm
 
-We present \pkg{tabplotd3} an interactive tool in \proglang{R} for inspecting large multivariate data consisting of million rows. 
-\pkg{tabplotd3} allows to visually check for anomalies, patterns and missing values in bivariate relations in multivariate data, for categorical as well as numerical variables. The interface creates tableplots \citep{malik10} from multi million \code{data.frame}s and allows to zoom in to individual observations. We applied the tool to the Dutch (virtual) census \citep{schulte}, creating a tableplot that depict the 17 million inhabitants of the Netherlands. \\ 
+We present \pkg{tabplotd3}, an interactive tool in \proglang{R} for inspecting large multivariate data consisting of millions of objects. 
+\pkg{tabplotd3} allows to visually check for anomalies, patterns and missing values in bivariate relations in multivariate data, for categorical as well as numerical variables. The interface creates tableplots \citep{malik10} from very large \code{data.frame}s and allows to zoom in to individual observations. We applied the tool to the Dutch (virtual) census \citep{schulte}, creating a tableplot that depicts the 16.4 million inhabitants of the Netherlands. \\ 
 
   \begin{center}
     \includegraphics[scale=0.6]{VT2008}
   \end{center}
  
-The presentation will describe tableplots, their use and implemention in \pkg{tabplot} and \pkg{tabplotd3}. The tool is an interactive web application. To allow interactive actions on multi million data.frames we implemented some aggregations methods in \proglang{C}. The user interface is in \proglang{javascript} and \proglang{SVG}. 
-The tool builds on several other packages including \pkg{Rook}, \pkg{RJSONIO}, \pkg{ff} and our non interactive \pkg{tabplot}. 
+The presentation will describe tableplots, their use and implemention in \pkg{tabplot} and \pkg{tabplotd3}. The tool is an interactive web application. To allow interactive actions on very large \code{data.frame}s we implemented some aggregations methods in \proglang{C}. The user interface is in \proglang{javascript} and \proglang{SVG}. 
+The tool builds on several other packages including \pkg{Rook}, \pkg{RJSONIO}, \pkg{ff}, and our non interactive \pkg{tabplot}. 
 
 %% references: 
 \bibliographystyle{chicago}
