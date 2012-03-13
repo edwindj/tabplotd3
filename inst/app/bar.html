@@ -103,9 +103,9 @@ var names = d3.select("body")
 var vis = d3.select("body")
   .append("svg:svg")
     .attr("width", w + 40)
-    .attr("height", h + 60)
+    .attr("height", h + 50)
   .append("svg:g")
-    .attr("transform", "translate(20,40)");
+    .attr("transform", "translate(20,30)");
 
 var cut;
 var vars;
@@ -119,22 +119,15 @@ d3.json("diamonds.json", function(json){
         .domain(d3.range(vars.length))
         .rangeBands([0, w], 0.1);
    
-   var labels = vis.select("g.labels")
-      .append("svg:g")
-	     .attr("class", "labels");
-   labels.select("text")
+   var labels = vis.append("svg:g")
+	   .attr("class", "labels");
+
+   labels.selectAll("text")
       .data(vars)
 	  .enter().append("svg:text")
-	  .text(vars);
-	  
-   names.selectAll("div")
-      .data(d3.keys(vars))
-	  .enter().append("div")
-	     .attr("class", "label")
-		 .attr("width", sc_vars.rangeBand())
-		 .attr("left", sc_vars)
-		 .text("test");
-	  
+	  .text(function(d,i) {return d;})
+        .attr("x", sc_vars);
+	  	  
    for (var i = 0; i < vars.length; i++){
      v = vars[i];
 	  if (json.vars[v].mean){

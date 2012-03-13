@@ -1,7 +1,7 @@
 .First <- function(){
   
   if (require(devtools)){
-    load_all("")
+    load_all(".")
   }
   
 }
