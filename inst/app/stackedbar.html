@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bar Chart</title>
+    <script type="text/javascript" src="js/d3.min.js"></script>
+    <script type="text/javascript" src="js/d3.layout.min.js"></script>
+    <style type="text/css">
+
+body {
+  font: 10px sans-serif;
+}
+
+svg {
+  shape-rendering: crispEdges;
+}
+
+rect.panel {
+   fill: #F1F1F1;
+}
+
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript">
+
+var data = [ [1,1,1]
+           , [2,2,2]
+           , [1.5,1.5,1.5]
+           ];
+           
+var stack;
+
+
+function catvar(data, container, offset, width, height, sc_bin){
+   freq = data;
+   var palette = data.palet;
+   
+   var vis = container.append("svg:g")
+       .attr("class", "catvar")
+       .attr("transform", "translate("+offset+")");
+
+   vis.append("svg:rect")
+      .attr("class", "panel")
+      .attr("width", width)
+      .attr("height", height);
+      
+   stack = d3.layout.stack();
+   var st = stack(freq);
+   return stack;
+}
+
+var w = 800,
+    h = 600,
+    x = d3.scale.linear()
+       .domain([0, 1])
+       .range([0, w]),
+    y = d3.scale.ordinal()
+       .domain(d3.range(data.length))
+       .rangeBands([0, h]),
+    z = d3.scale.linear()
+       .domain([0, 1])
+       .range(["white", "steelblue"]);
+
+var vis = d3.select("body")
+  .append("svg:svg")
+    .attr("width", w + 40)
+    .attr("height", h + 20)
+  .append("svg:g")
+    .attr("transform", "translate(20,0)");
+
+var cut;
+var vars;
+
+var svg = d3.select("svg");
+
+var st = catvar(data, svg, 0, w, h);
+
+function offset(d){
+   var cs = [0];
+   for (var i = 1; i < d.length; i++){
+      cs[i] = cs[i-1] + d[i-1];
+   }
+   return cs;
+}
+console.log(data.map(offset));
+
+    </script>
+  </body>
+</html>
