@@ -3,10 +3,11 @@ app <- Builder$new( Static$new( urls = c('/css','/img','/js')
                               )
                   , URLMap$new( '^/json' = function(env){
                                 }
-                              , ".*" = function(env){
+                              , "^/.*" = function(env){
                                    req <- Request$new(env)
                                    res <- Response$new()
-                                   res$redirect("/index.html")
+                                   res$redirect(req$to_url("/index.html"))
+                                   res$finish()
                                 }
                               )
                   )
