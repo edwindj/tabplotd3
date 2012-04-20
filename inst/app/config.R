@@ -1,14 +1,10 @@
-app <- Builder$new( Static$new( urls = c('/css','/img','/js')
-                              , root = system.file("app", package="tabplotd3")
+app <- Builder$new( Static$new( urls = c('/css','/img','/js','/.+\\.json') #, ".*\\.html$")
+                              , root = system.file("app", package="tabplotd3")#"."
                               )
+                  , Brewery$new(url='.*\\.html$',root= system.file("app", package="tabplotd3"))
                   , URLMap$new( '^/json' = function(env){
                                 }
-                              , "^/.*" = function(env){
-                                   req <- Request$new(env)
-                                   res <- Response$new()
-                                   res$redirect(req$to_url("/index.html"))
-                                   res$finish()
-                                }
+                              , ".*" = Redirect$new("/bar.html")
                               )
                   )
 
