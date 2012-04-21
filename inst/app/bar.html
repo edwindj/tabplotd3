@@ -4,7 +4,7 @@
     <title>Bar Chart</title>
     <script type="text/javascript" src="js/d3.min.js"></script>
     <script type="text/javascript" src="js/d3.layout.min.js"></script>
-    <script type="text/javascript" src="numericvar.js"></script>
+    <script type="text/javascript" src="js/numericvar.js"></script>
     <style type="text/css">
 
 body {
@@ -81,7 +81,6 @@ function catvar(data, container, offset, width, height, sc_bin){
 }
     
 var data = d3.range(100).map(Math.random);
-//var compl = d3.range(100).map(Math.random);
 
 
 var w = 800,
@@ -98,7 +97,7 @@ var w = 800,
 
 var names = d3.select("body")
   .append("div")
-     .attr("class", "vars")
+     .attr("class", "vars");
 	   
 var vis = d3.select("body")
   .append("svg:svg")
@@ -112,7 +111,7 @@ var vars;
 
 var svg = d3.select("svg");
 
-d3.json("diamonds.json", function(json){
+d3.json("test.json", function(json){
    vars = d3.keys(json.vars);
    
    sc_vars = d3.scale.ordinal()
@@ -137,9 +136,6 @@ d3.json("diamonds.json", function(json){
        catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
    }
-   
-   //carat = numvar(json.vars["carat"], svgel, sc_vars(1), sc_vars.rangeBand(), y, z);
-   //alert(json.vars.carat.mean);
 });
 
 function offSet(d){
@@ -149,8 +145,6 @@ function offSet(d){
    }
    return cs;
 }
-
-
-    </script>
+  </script>
   </body>
 </html>

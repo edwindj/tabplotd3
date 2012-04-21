@@ -9,10 +9,10 @@ adjust <- function(tp){
                                  , compl = i$compl/100
                                  )
                            )
-                                  categories <- colnames(i$freq)
-                                  freq <- round(i$freq / rowSums(i$freq), 4)
-                                  colnames(freq) <- NULL
-                                  list( freq = freq, palet=i$palet, categories=categories)
+                          categories <- colnames(i$freq)
+                          freq <- round(i$freq / rowSums(i$freq), 4)
+                          colnames(freq) <- NULL
+                          list( freq = freq, palet=i$palet, categories=categories)
                                   
                   }
                   )

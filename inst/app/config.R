@@ -1,4 +1,4 @@
-app <- Builder$new( Static$new( urls = c('/css','/img','/js','/.+\\.json') #, ".*\\.html$")
+app <- Builder$new( Static$new( urls = c('/css','/img','/js','/.+\\.json', "/.*\\.html$")
                               , root = system.file("app", package="tabplotd3")#"."
                               )
                   , Brewery$new(url='.*\\.html$',root= system.file("app", package="tabplotd3"))
@@ -8,4 +8,4 @@ app <- Builder$new( Static$new( urls = c('/css','/img','/js','/.+\\.json') #, ".
                               )
                   )
 
-s$launch(app, "app")
+#s$launch(app, "app")
