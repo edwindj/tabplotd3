@@ -1,5 +1,5 @@
-
-# adjustment of tableplot object, to be implemented in tabplot itself
+#' adjustment of tableplot object, to be implemented in tabplot itself
+#' @keywords internal 
 adjust <- function(tp){
   atp <- list()
   varnms <- sapply(tp$columns, function(i) i$name)

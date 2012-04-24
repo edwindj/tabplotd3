@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>Bar Chart</title>
+    <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
     <script type="text/javascript" src="js/d3.min.js"></script>
     <script type="text/javascript" src="js/d3.layout.min.js"></script>
     <script type="text/javascript" src="js/numericvar.js"></script>
@@ -28,14 +29,23 @@ rect.panel {
    fill: #F1F1F1;
 }
 
+.y.axis line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
+
+.highlight {
+  font-weight: bold;
+  fill: red;
+}
+
     </style>
   </head>
   <body>
     <script type="text/javascript">
-
+	
 var data;
 var stack;
-
 var freq;
 
 function catvar(data, container, offset, width, height, sc_bin){
@@ -66,10 +76,7 @@ function catvar(data, container, offset, width, height, sc_bin){
         
    bars.selectAll("rect.freq")
       .data(function(d,i){ 
-/*           if (!i){ 
-           alert(d3.zip(d, offSet(d)))
-           }
-*/         return d3.zip(d, offSet(d));
+				return d3.zip(d, offSet(d));
            return d;
        })
       .enter().append("svg:rect")
@@ -82,7 +89,6 @@ function catvar(data, container, offset, width, height, sc_bin){
     
 var data = d3.range(100).map(Math.random);
 
-
 var w = 800,
     h = 600,
     x = d3.scale.linear()
@@ -94,24 +100,42 @@ var w = 800,
     z = d3.scale.linear()
        .domain([0, 1])
        .range(["white", "steelblue"]);
+	
+	yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
+	yAxis.scale().range([0,h]);
 
 var names = d3.select("body")
   .append("div")
      .attr("class", "vars");
 	   
 var vis = d3.select("body")
-  .append("svg:svg")
+  .append("svg")
     .attr("width", w + 40)
     .attr("height", h + 50)
-  .append("svg:g")
-    .attr("transform", "translate(20,30)");
+  .append("g")
+    .attr("transform", "translate(30,30)");
 
-var cut;
-var vars;
+vis.append("g")
+      .attr("transform", "translate(10,0)")
+	  .attr("class", "y axis")
+      .call(yAxis);	
 
-var svg = d3.select("svg");
+//var cut;
+//var vars;
+
+function sortVar(d,i){
+   console.log(d,i);
+}
+
+function highlightText(selection){
+   selection
+      .on("mouseover", function() {d3.select(this).classed("highlight", true)})
+	  .on("mouseout", function() {d3.select(this).classed("highlight", false)})
+	  ;
+}
 
 d3.json("test.json", function(json){
+
    vars = d3.keys(json.vars);
    
    sc_vars = d3.scale.ordinal()
@@ -123,12 +147,15 @@ d3.json("test.json", function(json){
 
    labels.selectAll("text")
       .data(vars)
-	  .enter().append("svg:text")
+	  .enter().append("text")
 	  .text(function(d,i) {return d;})
-        .attr("x", sc_vars);
+        .attr("x", sc_vars)
+		.on("click", sortVar)
+		.call(highlightText)
+		;
 	  	  
    for (var i = 0; i < vars.length; i++){
-     v = vars[i];
+      v = vars[i];
 	  if (json.vars[v].mean){
        numvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y, z);
      } else {

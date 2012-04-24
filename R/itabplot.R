@@ -3,9 +3,11 @@ s <- NULL
 #' itabplot
 #' @export
 itabplot <- function(x, ...){
-  tp <- tableplot(x, plot=FALSE)
+  tp <- tableplot(x, plot=FALSE, ...)
+  jsonf <- system.file("app/test.json", package='tabplotd3')
   # todo write in the tmp directory and move this to a seperate json function
-  writeLines(toJSON(adjust(tp)), con=system.file('app/test.json', package='tabplotd3'))
+  writeLines(toJSON(adjust(tp)), con=jsonf)
+  
   if (is.null(s)){
     s <<- Rhttpd$new()
   }
@@ -16,10 +18,5 @@ itabplot <- function(x, ...){
           ) 
 }
 
-render_json <- function(x){
-   RJSONIO::toJSON(x)
-}
-
 #### testing
-
-itabplot(iris)
+ itabplot(iris)
