@@ -15,6 +15,7 @@ Collate:
     'itabplot.R'
     'pkg.R'
     'adjust.R'
+    'tpjson.R'
 Depends:
     Rook,
     RJSONIO,

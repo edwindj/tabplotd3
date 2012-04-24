@@ -12,11 +12,12 @@ itabplot <- function(x, ...){
     s <<- Rhttpd$new()
   }
   
-  s$launch( app=system.file('app/config.R', package='tabplotd3')
-          ,  name='tabplotd3'
-          , ...
+  apps <- system.file('app/config.R', package='tabplotd3')
+  print(apps)
+  s$launch( app=apps
+          , name='tabplotd3'
           ) 
 }
 
 #### testing
- itabplot(iris)
+#  itabplot(iris)

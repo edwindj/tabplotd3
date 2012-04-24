@@ -9,6 +9,6 @@ system.file <- function(..., pkg=NULL, package = "base", lib.loc = NULL, mustWor
 
 .First <- function(){
   if (require(devtools)){
-    load_all(".")
+#    load_all(".")
   }
 }
