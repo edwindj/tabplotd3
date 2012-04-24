@@ -6,6 +6,8 @@
     <script type="text/javascript" src="js/d3.min.js"></script>
     <script type="text/javascript" src="js/d3.layout.min.js"></script>
     <script type="text/javascript" src="js/numericvar.js"></script>
+    <script type="text/javascript" src="js/tp.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
     <style type="text/css">
 
 body {
@@ -42,99 +44,45 @@ rect.panel {
     </style>
   </head>
   <body>
-    <script type="text/javascript">
-	
-var data;
-var stack;
-var freq;
+  <script type="text/javascript">
 
-function catvar(data, container, offset, width, height, sc_bin){
-   freq = data.freq;
-   
-   sc_x = d3.scale.linear()
-       .domain([0, 1])
-       .range([0, width]);
-       
-   pal = d3.scale.ordinal().range(data.palet);
-
-   var palette = data.palet;
-   
-   var vis = container.append("svg:g")
-       .attr("class", "catvar")
-       .attr("transform", "translate("+offset+")");
-
-   vis.append("svg:rect")
-      .attr("class", "panel")
-      .attr("width", width)
-      .attr("height", height);
-      
-   var bars = vis.selectAll("g.bar")
-      .data(freq)
-      .enter().append("svg:g")
-        .attr("class", "bar")
-        .attr("transform", function(d, i) { return "translate(0," + sc_bin(i) + ")"; });
-        
-   bars.selectAll("rect.freq")
-      .data(function(d,i){ 
-				return d3.zip(d, offSet(d));
-           return d;
-       })
-      .enter().append("svg:rect")
-         .attr("class", "freq")
-         .attr("height", sc_bin.rangeBand())
-         .attr("width", function(d){return sc_x(d[0]);})
-         .attr("x", function(d){return sc_x(d[1]);})
-         .attr("fill", function(d,i) {return pal(i)});
-}
+//  var data;
+//var stack;
+//var freq;
     
-var data = d3.range(100).map(Math.random);
-
-var w = 800,
-    h = 600,
-    x = d3.scale.linear()
-       .domain([0, 1])
-       .range([0, w]),
-    y = d3.scale.ordinal()
-       .domain(d3.range(data.length))
-       .rangeBands([0, h]),
-    z = d3.scale.linear()
-       .domain([0, 1])
-       .range(["white", "steelblue"]);
+function draw(json){
+	var data = d3.range(100).map(Math.random);
 	
-	yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
-	yAxis.scale().range([0,h]);
+	var w = 800,
+		h = 600,
+		x = d3.scale.linear()
+		   .domain([0, 1])
+		   .range([0, w]),
+		y = d3.scale.ordinal()
+		   .domain(d3.range(data.length))
+		   .rangeBands([0, h]),
+		z = d3.scale.linear()
+		   .domain([0, 1])
+		   .range(["white", "steelblue"]);
+		
+		yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
+		yAxis.scale().range([0,h]);
 
-var names = d3.select("body")
-  .append("div")
-     .attr("class", "vars");
-	   
-var vis = d3.select("body")
-  .append("svg")
-    .attr("width", w + 40)
-    .attr("height", h + 50)
-  .append("g")
-    .attr("transform", "translate(30,30)");
+	var names = d3.select("body")
+	  .append("div")
+		 .attr("class", "vars");
+		   
+	var vis = d3.select("body")
+	  .append("svg")
+	   .attr("width", w + 40)
+		.attr("height", h + 50)
+	  .append("g")
+		.attr("transform", "translate(30,30)");
 
-vis.append("g")
-      .attr("transform", "translate(10,0)")
-	  .attr("class", "y axis")
-      .call(yAxis);	
-
-//var cut;
-//var vars;
-
-function sortVar(d,i){
-   console.log(d,i);
-}
-
-function highlightText(selection){
-   selection
-      .on("mouseover", function() {d3.select(this).classed("highlight", true)})
-	  .on("mouseout", function() {d3.select(this).classed("highlight", false)})
-	  ;
-}
-
-d3.json("test.json", function(json){
+	vis.append("g")
+		  .attr("transform", "translate(10,0)")
+		  .attr("class", "y axis")
+		  .call(yAxis);	
 
    vars = d3.keys(json.vars);
    
@@ -163,15 +111,13 @@ d3.json("test.json", function(json){
        catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
    }
-});
-
-function offSet(d){
-   var cs = [0];
-   for (var i = 1; i < d.length; i++){
-      cs[i] = cs[i-1] + d[i-1];
-   }
-   return cs;
 }
+//var cut;
+//var vars;
+
+
+d3.json("test.json", draw);
+
   </script>
   </body>
 </html>
