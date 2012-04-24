@@ -41,83 +41,12 @@ rect.panel {
   fill: red;
 }
 
-    </style>
+</style>
   </head>
   <body>
   <script type="text/javascript">
-
-//  var data;
-//var stack;
-//var freq;
-    
-function draw(json){
-	var data = d3.range(100).map(Math.random);
-	
-	var w = 800,
-		h = 600,
-		x = d3.scale.linear()
-		   .domain([0, 1])
-		   .range([0, w]),
-		y = d3.scale.ordinal()
-		   .domain(d3.range(data.length))
-		   .rangeBands([0, h]),
-		z = d3.scale.linear()
-		   .domain([0, 1])
-		   .range(["white", "steelblue"]);
-		
-		yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
-		yAxis.scale().range([0,h]);
-
-	var names = d3.select("body")
-	  .append("div")
-		 .attr("class", "vars");
-		   
-	var vis = d3.select("body")
-	  .append("svg")
-	   .attr("width", w + 40)
-		.attr("height", h + 50)
-	  .append("g")
-		.attr("transform", "translate(30,30)");
-
-	vis.append("g")
-		  .attr("transform", "translate(10,0)")
-		  .attr("class", "y axis")
-		  .call(yAxis);	
-
-   vars = d3.keys(json.vars);
-   
-   sc_vars = d3.scale.ordinal()
-        .domain(d3.range(vars.length))
-        .rangeBands([0, w], 0.1);
-   
-   var labels = vis.append("svg:g")
-	   .attr("class", "labels");
-
-   labels.selectAll("text")
-      .data(vars)
-	  .enter().append("text")
-	  .text(function(d,i) {return d;})
-        .attr("x", sc_vars)
-		.on("click", sortVar)
-		.call(highlightText)
-		;
-	  	  
-   for (var i = 0; i < vars.length; i++){
-      v = vars[i];
-	  if (json.vars[v].mean){
-       numvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y, z);
-     } else {
-       cut = json.vars[v];
-       catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
-     }
-   }
-}
-//var cut;
-//var vars;
-
-
-d3.json("test.json", draw);
-
+     tp.settings.name = '<%= "iris" %>';
+     d3.json("test.json", draw);
   </script>
   </body>
 </html>

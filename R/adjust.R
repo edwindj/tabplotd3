@@ -18,5 +18,7 @@ adjust <- function(tp){
                   )
   names(vars) <- varnms
   atp$vars <- vars
+  atp$dataset <- tp$dataset
+  atp$sortCol <- unlist(lapply(tp$columns, function(x) if (x$sort != "") x$name))
   atp
 }
