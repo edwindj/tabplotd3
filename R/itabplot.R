@@ -14,11 +14,12 @@ itabplot <- function(x, ...){
     s <<- Rhttpd$new()
     apps <- system.file('app/config.R', package='tabplotd3')
     s$launch( app=apps
-         , name='tabplotd3'
-         ) 
+            , name='tabplotd3'
+            ) 
   }
   s$browse("tabplotd3")
 }
 
 #### testing
-#  itabplot(iris)
+irisg <- iris[sample(nrow(iris), 1e5, replace=TRUE),]
+itabplot(irisg)

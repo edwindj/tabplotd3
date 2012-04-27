@@ -45,7 +45,7 @@ rect.panel {
   </head>
   <body>
   <script type="text/javascript">
-     tp.settings.name = '<%= "iris" %>';
+     $.extend(tp.settings, <%= toJSON(req$GET()) %>);
      d3.json("test.json", draw);
   </script>
   </body>

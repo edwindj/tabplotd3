@@ -1,10 +1,11 @@
 var tp = {};
 
-tp.settings = {};
+tp.settings = { from:0
+              , to:100
+              };
 
 function draw(json){
 	var data = d3.range(100).map(Math.random);
-	
 	
 	var w = $("body").width() - 40,
 		h = 600,
@@ -18,10 +19,10 @@ function draw(json){
 		   .domain([0, 1])
 		   .range(["white", "steelblue"]);
 		
-		yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
-		yAxis.scale().range([0,h]);
+	yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
+	yAxis.scale().domain([tp.settings.from/100, tp.settings.to/100]).range([0,h]);
 		
-    var body = d3.select("body");
+   var body = d3.select("body");
 	
 	var names = body.select("div.vars");
 	
@@ -31,6 +32,7 @@ function draw(json){
 	}
 	
 	var svg = body.select("svg");
+   
 	if (svg.empty()){
 	  svg = body.append("svg")
 	        .attr("width", w + 40)
@@ -75,4 +77,16 @@ function draw(json){
        catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
    }
+   
+   // svg.selectAll("rect.bla")
+     // .data([0])
+     // .enter()
+       // .append("rect")
+         // .attr("class", "bla")
+         // .attr("height", 300)
+         // .attr("width", 300)
+         // .attr("x", 0)
+         // .attr("fill", "red")
+         // .attr("y", 0)
+     // ;
 }

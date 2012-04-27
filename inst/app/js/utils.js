@@ -7,8 +7,10 @@ function offSet(d){
 }
 
 function sortVar(d,i){
-   console.log(d,i);
-   d3.json("json?dat=iris&sortCol="+d, draw)
+   tp.settings.sortCol = d;
+   var params = d3.entries(tp.settings).map(function(d) d.key + "=" + d.value);
+   
+   d3.json("json?" + params.join("&"), draw)
 }
 
 function highlightText(selection){
