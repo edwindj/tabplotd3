@@ -12,14 +12,30 @@ itabplot <- function(x, ...){
   
   if (is.null(s)){
     s <<- Rhttpd$new()
-    apps <- system.file('app/config.R', package='tabplotd3')
-    s$launch( app=apps
-            , name='tabplotd3'
-            ) 
+  } else { 
+    s$remove(all=TRUE)
   }
-  s$browse("tabplotd3")
+  
+  app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
+                                  , root = system.file("app", package="tabplotd3")#"."
+                                  )
+                      , Brewery$new( url='.*\\.html$'
+                                   , root= system.file("app", package="tabplotd3")
+                                   , dat=x
+                                   , xlit=xlit
+                                   , ...
+                                   )
+                      , URLMap$new( '^/json' = tpjson
+                                    , ".*" = Redirect$new("/bar.html")
+                                    )
+                    )
+  s$launch( app=app
+          , name='tabplotd3'
+          ) 
+  #s$browse("tabplotd3")
 }
 
 #### testing
-irisg <- iris[sample(nrow(iris), 1e5, replace=TRUE),]
-itabplot(irisg)
+### just run this whole file after load_all()
+# irisg <- iris[sample(nrow(iris), 1e5, replace=TRUE),]
+# itabplot(irisg)
