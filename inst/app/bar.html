@@ -46,8 +46,18 @@ rect.panel {
   <body>
   <script type="text/javascript">
      tp.settings.dat = '<%= xlit%>';
-     $.extend(tp.settings, <%= toJSON(req$GET()) %>);
-     d3.json("test.json", draw);
+	 /* <% print(list(...))%> */
+	 $.extend(tp.settings, <%= toJSON(req$GET()) %>);
+     d3.json("json?dat=<%= xlit%>", draw);
   </script>
+  
+  <div class="controls"> 
+        <input id="from" type="text" value=0 />% 
+        <input id="to" type="text" value=100 />%
+  </div>
+  
+  <div class="vars">
+  </div>
+  
   </body>
 </html>

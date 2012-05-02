@@ -5,10 +5,11 @@ s <- NULL
 itabplot <- function(x, ...){
   xlit <- deparse(substitute(x))
   tp <- tableplot(x, plot=FALSE, ...)
+  args <- list(...)
   
-  jsonf <- system.file("app/test.json", package='tabplotd3')
+  #jsonf <- system.file("app/test.json", package='tabplotd3')
   # todo write in the tmp directory and move this to a seperate json function
-  writeLines(toJSON(adjust(tp)), con=jsonf)
+  #writeLines(toJSON(adjust(tp)), con=jsonf)
   
   if (is.null(s)){
     s <<- Rhttpd$new()
@@ -17,17 +18,18 @@ itabplot <- function(x, ...){
   }
   
   app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
-                                  , root = system.file("app", package="tabplotd3")#"."
-                                  )
-                      , Brewery$new( url='.*\\.html$'
-                                   , root= system.file("app", package="tabplotd3")
-                                   , dat=x
-                                   , xlit=xlit
-                                   , ...
-                                   )
-                      , URLMap$new( '^/json' = tpjson
-                                    , ".*" = Redirect$new("/bar.html")
-                                    )
+                                , root = system.file("app", package="tabplotd3")#"."
+                                )
+                    , Brewery$new( url='.*\\.html$'
+                                 , root= system.file("app", package="tabplotd3")
+                                 , dat=x
+                                 , xlit=xlit
+                                 , args=args
+                                 , ...
+                                 )
+                    , URLMap$new( '^/json' = tpjson
+                                , ".*" = Redirect$new("/bar.html")
+                                )
                     )
   s$launch( app=app
           , name='tabplotd3'
@@ -37,5 +39,5 @@ itabplot <- function(x, ...){
 
 #### testing
 ### just run this whole file after load_all()
-# irisg <- iris[sample(nrow(iris), 1e5, replace=TRUE),]
-# itabplot(irisg)
+#irisg <- iris[sample(nrow(iris), 1e4, replace=TRUE),]
+#itabplot(iris)
