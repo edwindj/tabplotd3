@@ -24,9 +24,9 @@ function draw(json){
 		
    var body = d3.select("body");
 	
-	var names = body.select("div.vars");
+   var names = body.select("div.vars");
 	
-	if (names.empty()){
+   if (names.empty()){
 	  names = body.append("div")
 		 .attr("class", "vars");
 	}

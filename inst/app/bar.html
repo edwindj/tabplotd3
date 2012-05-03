@@ -3,6 +3,8 @@
   <head>
     <title>Tableplot <%= xlit %> </title>
     <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+    <link type="text/css" href="css/smoothness/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
     <script type="text/javascript" src="js/d3.min.js"></script>
     <script type="text/javascript" src="js/d3.layout.min.js"></script>
     <script type="text/javascript" src="js/numericvar.js"></script>
@@ -45,15 +47,39 @@ rect.panel {
   </head>
   <body>
   <script type="text/javascript">
+$(function(){
+     $("#from_to").slider({
+			range: true,
+			values:[0,100],
+			step: 0.01,
+			min: 0,
+			max: 100,
+			slide: function( event, ui ) {
+			    tp.settings.from = ui.values[0];
+				tp.settings.to = ui.values[1];
+				$( "#from" ).val( ui.values[0] );
+				$( "#to" ).val( ui.values[1] );
+				var params = d3.entries(tp.settings).map(function(d) d.key + "=" + d.value);
+                /*d3.json("json?" + params.join("&"), draw)*/
+			},
+			stop: function(event, ui){
+			    var params = d3.entries(tp.settings).map(function(d) d.key + "=" + d.value);
+                d3.json("json?" + params.join("&"), draw)
+			}
+	 })
+});
+  
      tp.settings.dat = '<%= xlit%>';
 	 /* <% print(list(...))%> */
 	 $.extend(tp.settings, <%= toJSON(req$GET()) %>);
      d3.json("json?dat=<%= xlit%>", draw);
+  
   </script>
   
   <div class="controls"> 
         <input id="from" type="text" value=0 />% 
         <input id="to" type="text" value=100 />%
+		<div id="from_to" />
   </div>
   
   <div class="vars">
