@@ -19,7 +19,7 @@ function draw(json){
 		   .domain([0, 1])
 		   .range(["white", "steelblue"]);
 		
-	yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format("%"));
+	yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format(".1%"));
 	yAxis.scale().domain([tp.settings.from/100, tp.settings.to/100]).range([0,h]);
 		
    var body = d3.select("body");

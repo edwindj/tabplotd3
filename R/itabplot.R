@@ -39,5 +39,5 @@ itabplot <- function(x, ...){
 
 #### testing
 ### just run this whole file after load_all()
-#irisg <- iris[sample(nrow(iris), 1e4, replace=TRUE),]
-#itabplot(iris)
+# irisg <- iris[sample(nrow(iris), 1e4, replace=TRUE),]
+# itabplot(irisg)

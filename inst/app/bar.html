@@ -43,32 +43,45 @@ rect.panel {
   fill: red;
 }
 
+input {
+   text-align: right;
+}
+
 </style>
   </head>
   <body>
   <script type="text/javascript">
 $(function(){
+
      $("#from_to").slider({
 			range: true,
 			values:[0,100],
 			step: 0.01,
 			min: 0,
 			max: 100,
-			slide: function( event, ui ) {
-			    tp.settings.from = ui.values[0];
+			slide: function( event, ui ) {           
+			   tp.settings.from = ui.values[0];
 				tp.settings.to = ui.values[1];
-				$( "#from" ).val( ui.values[0] );
-				$( "#to" ).val( ui.values[1] );
-				var params = d3.entries(tp.settings).map(function(d) d.key + "=" + d.value);
-                /*d3.json("json?" + params.join("&"), draw)*/
+            zoomUpdate();
 			},
 			stop: function(event, ui){
-			    var params = d3.entries(tp.settings).map(function(d) d.key + "=" + d.value);
-                d3.json("json?" + params.join("&"), draw)
+             redraw();
 			}
-	 })
+	 });
+    
+    $("#from").change(function(e){
+       tp.settings.from = $("#from").val();
+       zoomUpdate();
+       redraw();
+    });
+    
+    $("#to").change(function(e){
+       tp.settings.to = $("#to").val();
+       zoomUpdate();
+       redraw();
+    });
+    
 });
-  
      tp.settings.dat = '<%= xlit%>';
 	 /* <% print(list(...))%> */
 	 $.extend(tp.settings, <%= toJSON(req$GET()) %>);
