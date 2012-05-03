@@ -43,8 +43,17 @@ rect.panel {
   fill: red;
 }
 
+div.plot {
+   display: inline;
+}
+
+.plot input {
+   width: 5ex;
+}
+
 input {
    text-align: right;
+   width: 5ex;
 }
 
 </style>
@@ -88,14 +97,23 @@ $(function(){
      d3.json("json?dat=<%= xlit%>", draw);
   
   </script>
-  
-  <div class="controls"> 
-        <input id="from" type="text" value=0 />% 
+    
+  <div id="plot">
+     <div class="controls"> 
+        <input id="from" type="text" value=0 />% - 
         <input id="to" type="text" value=100 />%
-		<div id="from_to" />
-  </div>
-  
-  <div class="vars">
+	 	  <div id="from_to" style="width:80%"/>
+     </div>
+     <hr />
+     <div class="vars">
+         <div style="display:inline" id="offset"></div>
+     </div>
+     <svg>
+       <g transform="translate(30,30)">
+         <g id="vis"></g>
+         <g class="y axis"></g>
+       </g>
+     </svg>
   </div>
   
   </body>
