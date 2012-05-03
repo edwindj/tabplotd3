@@ -8,14 +8,14 @@ function draw(json){
 	var data = d3.range(100).map(Math.random);
 	
 	var w = $("body").width() - 40,
-		 h = 600,
-		 x = d3.scale.linear()
+		h = 600,
+		x = d3.scale.linear()
 		      .domain([0, 1])
 		      .range([0, w]),
-		 y = d3.scale.ordinal()
+		y = d3.scale.ordinal()
 		      .domain(d3.range(data.length))
 		      .rangeBands([0, h]),
-		 z = d3.scale.linear()
+		z = d3.scale.linear()
 		      .domain([0, 1])
 		      .range(["white", "steelblue"]);
 		
@@ -27,7 +27,7 @@ function draw(json){
 	
 	var svg = body.select("svg")
       .attr("width", w + 40)
-	   .attr("height", h + 50)
+	  .attr("height", h + 50)
       ;
    
 	var vis = svg.select("#vis").text("");
@@ -36,35 +36,40 @@ function draw(json){
 		  .attr("transform", "translate(10,0)")
 		  .call(yAxis);	
 
-   vars = d3.keys(json.vars);
-
+    vars = d3.keys(json.vars);
    
-   sc_vars = d3.scale.ordinal()
+    sc_vars = d3.scale.ordinal()
         .domain(d3.range(vars.length))
         .rangeBands([0, w], 0.1);
    
-   var names = body.select("div.vars");
-   names.select("#offset")
-      .style("margin-left", "30px")
-      ;
+    var names = body.select("div.vars");
+    names.select("#offset")
+         .style("margin-left", "30px")
+         ;
    
-   var name = names.selectAll("button")
+    var name = names.selectAll("button")
       .data(vars);
    
-   var rb = sc_vars.rangeBand();
+    var rb = sc_vars.rangeBand();
    
-   name.enter()
+    name.enter()
       .append("button")
+	  .classed("sorted", function(d) {
+	     console.log("d:",d);
+		 console.log(tp.settings);
+	   })
       .style("width", rb + "px")
       .style("margin-left", .1 * rb + "px")
       .text(function(d) d)
-		.on("click", sortVar)
+	  .on("click", sortVar)
       ;
    
    name.exit().remove();
+   name.filter(function(d) d == tp.settings.sortCol)
+       .classed("sorted", true)
+	   ;
    
-   $("button").button();
-   
+   $("button").button();  
    /*$("button").width(sc_vars.rangeBand()*1.1);*/
    
    /*var labels = vis.append("svg:g")
