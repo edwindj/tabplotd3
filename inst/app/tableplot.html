@@ -69,8 +69,8 @@ $(window).load(function(){
 			min: 0,
 			max: 100,
 			slide: function( event, ui ) {           
-			   tp.settings.from = ui.values[0];
-				tp.settings.to = ui.values[1];
+			   tp.settings.from = +ui.values[0];
+				tp.settings.to = +ui.values[1];
             zoomUpdate();
 			},
 			stop: function(event, ui){
@@ -79,13 +79,13 @@ $(window).load(function(){
 	 });
     
     $("#from").change(function(e){
-       tp.settings.from = $("#from").val();
+       tp.settings.from = +$("#from").val();
        zoomUpdate();
        redraw();
     });
     
     $("#to").change(function(e){
-       tp.settings.to = $("#to").val();
+       tp.settings.to = +$("#to").val();
        zoomUpdate();
        redraw();
     });

@@ -26,10 +26,12 @@ function zoomUpdate(){
    $( "#from" ).val(from);
    $( "#to" ).val(to);
    $("#from_to").slider("option", "values", [from,to]);
+   yAxis.scale().domain([from/100, to/100]);
 }
 
 function redraw(){
    zoomUpdate();
    var params = d3.entries(tp.settings).map(function(d) {return d.key + "=" + d.value});   
    d3.json("json?" + params.join("&"), draw)
+   d3.select(".y.axis").transition().duration(500).call(yAxis);
 }
