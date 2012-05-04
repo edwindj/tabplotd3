@@ -36,8 +36,10 @@ function draw(json){
 		  .attr("transform", "translate(10,0)")
 		  .call(yAxis);	
 
-    vars = d3.keys(json.vars);
-   
+    var vars = d3.keys(json.vars);
+    
+	tp.settings.sortCol = tp.settings.sortCol || vars[0];
+	 
     sc_vars = d3.scale.ordinal()
         .domain(d3.range(vars.length))
         .rangeBands([0, w], 0.1);
@@ -65,11 +67,22 @@ function draw(json){
       ;
    
    name.exit().remove();
+   
    name.filter(function(d) d == tp.settings.sortCol)
        .classed("sorted", true)
 	   ;
    
-   $("button").button();  
+   //$("button").button();  
+   name.each(function(d){
+      var option = {icons:{}};
+	  
+	  if (d === tp.settings.sortCol){
+	     option.icons = {secondary: "ui-icon-triangle-1-s"};
+	  }
+	  
+      $(this).button(option);
+   })
+   
    /*$("button").width(sc_vars.rangeBand()*1.1);*/
    
    /*var labels = vis.append("svg:g")
