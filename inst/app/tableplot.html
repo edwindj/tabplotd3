@@ -60,7 +60,7 @@ input {
   </head>
   <body>
   <script type="text/javascript">
-$(function(){
+$(window).load(function(){
 
      $("#from_to").slider({
 			range: true,
@@ -90,11 +90,11 @@ $(function(){
        redraw();
     });
     
-});
-     tp.settings.dat = '<%= xlit%>';
-	 /* <% print(list(...))%> */
+    tp.settings.dat = '<%= xlit%>';
 	 $.extend(tp.settings, <%= toJSON(req$GET()) %>);
-     d3.json("json?dat=<%= xlit%>", draw);
+    
+    d3.json("json?dat=<%= xlit%>", draw);
+});
   
   </script>
     

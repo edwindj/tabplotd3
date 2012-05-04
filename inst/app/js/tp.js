@@ -56,14 +56,10 @@ function draw(json){
    
     name.enter()
       .append("button")
-	  .classed("sorted", function(d) {
-	     console.log("d:",d);
-		 console.log(tp.settings);
-	   })
       .style("width", rb + "px")
       .style("margin-left", .1 * rb + "px")
-      .text(function(d) d)
-	  .on("click", sortVar)
+      .text(function(d) {return d;})
+	   .on("click", sortVar)
       ;
    
    name.exit().remove();
@@ -84,8 +80,8 @@ function draw(json){
 	 
    cols.enter().append("g")
      .classed("columns", true)
-	 .classed("numeric", function(d) json.vars[d].mean)
-	 .classed("categorical", function(d) !json.vars[d].mean)
+	 .classed("numeric", function(d) {return json.vars[d].mean})
+	 .classed("categorical", function(d) {return !json.vars[d].mean})
 	 ;
    
    cols.exit().remove();

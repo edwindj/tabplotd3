@@ -30,6 +30,6 @@ function zoomUpdate(){
 
 function redraw(){
    zoomUpdate();
-   var params = d3.entries(tp.settings).map(function(d) d.key + "=" + d.value);   
+   var params = d3.entries(tp.settings).map(function(d) {return d.key + "=" + d.value});   
    d3.json("json?" + params.join("&"), draw)
 }
