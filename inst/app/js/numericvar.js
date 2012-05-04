@@ -61,7 +61,9 @@ var bars = vis.selectAll("g.bar")
 bars.append("svg:rect")
     .attr("fill", function(d,i){return sc_complete(data.compl[i])})
     .attr("width", sc_x)
-    .attr("height", sc_bin.rangeBand());
+    .attr("height", sc_bin.rangeBand())
+    .attr("title", function(d){return d;})
+    ;
 
 bars.append("svg:line")
     .style("stroke-width", 1)

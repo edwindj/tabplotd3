@@ -7,6 +7,7 @@ function offSet(d){
 }
 
 function sortVar(d,i){
+   tp.settings.decreasing = !(tp.settings.decreasing || tp.settings.sortCol != d);
    tp.settings.sortCol = d;
    tp.settings.from = 0;
    tp.settings.to = 100;

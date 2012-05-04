@@ -64,12 +64,15 @@ function draw(json){
    
    name.exit().remove();
    
-   //$("button").button();  
    name.each(function(d){
       var option = {icons:{}};
 	  
 	  if (d === tp.settings.sortCol){
-	     option.icons = {secondary: "ui-icon-triangle-1-s"};
+        if (!tp.settings.decreasing){
+	        option.icons = {secondary: "ui-icon-triangle-1-n"};
+        } else{
+	        option.icons = {secondary: "ui-icon-triangle-1-s"};
+        }
 	  }
 	  
       $(this).button(option);
@@ -79,7 +82,7 @@ function draw(json){
      .data(vars);
 	 
    cols.enter().append("g")
-     .classed("columns", true)
+    .classed("columns", true)
 	 .classed("numeric", function(d) {return json.vars[d].mean})
 	 .classed("categorical", function(d) {return !json.vars[d].mean})
 	 ;
