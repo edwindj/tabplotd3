@@ -68,10 +68,6 @@ function draw(json){
    
    name.exit().remove();
    
-   name.filter(function(d) d == tp.settings.sortCol)
-       .classed("sorted", true)
-	   ;
-   
    //$("button").button();  
    name.each(function(d){
       var option = {icons:{}};
@@ -83,21 +79,17 @@ function draw(json){
       $(this).button(option);
    })
    
-   /*$("button").width(sc_vars.rangeBand()*1.1);*/
+   var cols = vis.selectAll("g.columns")
+     .data(vars);
+	 
+   cols.enter().append("g")
+     .classed("columns", true)
+	 .classed("numeric", function(d) json.vars[d].mean)
+	 .classed("categorical", function(d) !json.vars[d].mean)
+	 ;
    
-   /*var labels = vis.append("svg:g")
-	   .attr("class", "labels");
-
-   labels.selectAll("text")
-      .data(vars)
-	  .enter().append("text")
-	    .attr("class", "label")
-	  .text(function(d,i) {return d;})
-        .attr("x", sc_vars)
-		.on("click", sortVar)
-		.call(highlightText)
-		;
-	*/  	  
+   cols.exit().remove();
+   
    for (var i = 0; i < vars.length; i++){
       v = vars[i];
 	  if (json.vars[v].mean){
@@ -106,17 +98,5 @@ function draw(json){
        cut = json.vars[v];
        catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
-   }
-   
-   // svg.selectAll("rect.bla")
-     // .data([0])
-     // .enter()
-       // .append("rect")
-         // .attr("class", "bla")
-         // .attr("height", 300)
-         // .attr("width", 300)
-         // .attr("x", 0)
-         // .attr("fill", "red")
-         // .attr("y", 0)
-     // ;
+   }   
 }
