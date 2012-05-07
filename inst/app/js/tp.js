@@ -3,9 +3,11 @@ var tp = {};
 tp.settings = { from : 0
               , to : 100
               };
+			  
+var varss;
 
 function draw(json){
-	var data = d3.range(100).map(Math.random);
+	varss = json;
 	
 	var w = $("body").width() - 40,
 		h = 600,
@@ -13,7 +15,7 @@ function draw(json){
 		      .domain([0, 1])
 		      .range([0, w]),
 		y = d3.scale.ordinal()
-		      .domain(d3.range(data.length))
+		      .domain(d3.range(json.nBins))
 		      .rangeBands([0, h]),
 		z = d3.scale.linear()
 		      .domain([0, 1])
