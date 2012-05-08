@@ -22,15 +22,17 @@ function draw(json){
 		      .range(["white", "steelblue"]);
 		
 	yAxis = d3.svg.axis().ticks(10).orient("left").tickFormat(d3.format(".1%"));
-	yAxis.scale().domain([tp.settings.from/100, tp.settings.to/100]).range([0,h]);
+	yAxis.scale().domain([ tp.settings.from/100, tp.settings.to/100]).range([0,h]);
 		
    var body = d3.select("body");
 	
 	
 	var svg = body.select("svg")
       .attr("width", w + 40)
-	  .attr("height", h + 50)
-      ;
+	   .attr("height", h + 50)
+      .call(d3.behavior.zoom().y(yAxis.scale()).on("zoom", zoom));
+   ;
+   
    
 	var vis = svg.select("#vis").text("");
 

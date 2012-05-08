@@ -30,6 +30,13 @@ function zoomUpdate(){
    yAxis.scale().domain([from/100, to/100]);
 }
 
+function zoom(){
+   var d = yAxis.scale().domain();
+   tp.settings.from = d[0]*100;
+   tp.settings.to = d[1]*100;
+   redraw();
+}
+
 function redraw(){
    zoomUpdate();
    var params = d3.entries(tp.settings).map(function(d) {return d.key + "=" + d.value});   
