@@ -67,7 +67,7 @@ function draw(json){
    name.exit().remove();
    
    name.each(function(d){
-      var option = {icons:{}};
+      var option = {icons:{secondary: "ui-icon-triangle-2-n-s"}};
 	  
 	  if (d === tp.settings.sortCol){
         if (!tp.settings.decreasing){
