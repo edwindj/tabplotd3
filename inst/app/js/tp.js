@@ -9,7 +9,7 @@ var varss;
 function draw(json){
 	varss = json;
 	
-	var w = $("body").width() - 40,
+	var w = $("body").width() - 60,
 		h = 600,
 		x = d3.scale.linear()
 		      .domain([0, 1])
@@ -28,14 +28,14 @@ function draw(json){
   var body = d3.select("body");
 	
 	var svg = body.select("svg")
-      .attr("width", w + 40)
+      .attr("width", w + 60)
 	  .attr("height", h + 50)
       ;
    
 	var vis = svg.select("#vis").text("");
 
 	svg.select("g.y.axis")
-		  .attr("transform", "translate(10,0)")
+		  .attr("transform", "translate(15,0)")
 		  .call(yAxis);	
 
     var vars = d3.keys(json.vars);
@@ -84,7 +84,7 @@ function draw(json){
      .data(vars);
 	 
    cols.enter().append("g")
-    .classed("columns", true)
+     .classed("columns", true)
 	 .classed("numeric", function(d) {return json.vars[d].mean})
 	 .classed("categorical", function(d) {return !json.vars[d].mean})
 	 ;
