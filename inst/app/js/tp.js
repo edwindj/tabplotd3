@@ -99,5 +99,10 @@ function draw(json){
        cut = json.vars[v];
        catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
-   }   
+   }
+
+   $('rect').tipsy({
+        gravity: 'w'
+	  });   
+   
 }

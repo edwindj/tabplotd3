@@ -1,6 +1,6 @@
 Package: tabplotd3
 Maintainer: Edwin de Jonge<edwindjonge@gmail.com>
-License: GPL version 3
+License: GPL-3
 Title: Tabplotd3, interactive inspection of large data
 Type: Package
 LazyLoad: yes

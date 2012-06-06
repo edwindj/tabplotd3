@@ -39,6 +39,7 @@ function catvar(data, container, offset, width, height, sc_bin){
 
 function numvar(data, container, offset, width, height, sc_bin, sc_complete){
 
+console.log(data)
 sc_x = d3.scale.linear()
        .domain([0, d3.max(data.mean)])
        .range([0, width]);
@@ -63,8 +64,9 @@ bars.append("svg:rect")
     .attr("width", sc_x)
     .attr("height", sc_bin.rangeBand())
     .attr("title", function(d){return d;})
-    ;
+ ;
 
+	
 bars.append("svg:line")
     .style("stroke-width", 1)
     .style("stroke", "steelblue")
