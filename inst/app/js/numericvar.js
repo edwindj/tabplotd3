@@ -1,5 +1,18 @@
+function highlight(d, i){
+  var cols = d3.select("g.columns");
+  
+  cols.each(function(col){
+     
+  });
+}
+
+function tooltiptext(d, i){
+  return d;
+}
+
 function catvar(data, container, offset, width, height, sc_bin){
    freq = data.freq;
+   //console.log(data);
    
    sc_x = d3.scale.linear()
        .domain([0, 1])
@@ -31,6 +44,9 @@ function catvar(data, container, offset, width, height, sc_bin){
        })
       .enter().append("svg:rect")
          .attr("class", "freq")
+         .attr("title", function(d, i){
+            return data.categories[i] + ": " + d3.format(".1%")(d[0]);
+         })
          .attr("height", sc_bin.rangeBand())
          .attr("width", function(d){return sc_x(d[0]);})
          .attr("x", function(d){return sc_x(d[1]);})
@@ -39,7 +55,6 @@ function catvar(data, container, offset, width, height, sc_bin){
 
 function numvar(data, container, offset, width, height, sc_bin, sc_complete){
 
-console.log(data)
 sc_x = d3.scale.linear()
        .domain([0, d3.max(data.mean)])
        .range([0, width]);
@@ -63,7 +78,7 @@ bars.append("svg:rect")
     .attr("fill", function(d,i){return sc_complete(data.compl[i])})
     .attr("width", sc_x)
     .attr("height", sc_bin.rangeBand())
-    .attr("title", function(d){return d;})
+    .attr("title", tooltiptext)
  ;
 
 	

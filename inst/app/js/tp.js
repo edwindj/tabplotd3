@@ -5,6 +5,7 @@ tp.settings = { from : 0
               };
 			  
 var varss;
+var svg;
 
 function draw(json){
 	varss = json;
@@ -27,7 +28,7 @@ function draw(json){
 		
   var body = d3.select("body");
 	
-	var svg = body.select("svg")
+	svg = body.select("svg")
       .attr("width", w + 60)
 	  .attr("height", h + 50)
       ;
@@ -84,7 +85,7 @@ function draw(json){
      .data(vars);
 	 
    cols.enter().append("g")
-     .classed("columns", true)
+     .classed("column", true)
 	 .classed("numeric", function(d) {return json.vars[d].mean})
 	 .classed("categorical", function(d) {return !json.vars[d].mean})
 	 ;
@@ -103,6 +104,28 @@ function draw(json){
 
    $('rect').tipsy({
         gravity: 'w'
-	  });   
+	  });
+    
+  vis.append("g")
+    .attr("class", "brush")
+    .call(d3.svg.brush().y(y)
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend))
    
 }
+
+function brushstart() {
+  svg.classed("selecting", true);
+}
+
+function brushmove() {
+  var s = d3.event.target.extent();
+  console.log(s);
+  symbol.classed("selected", function(d) { return s[0] <= (d = x(d)) && d <= s[1]; });
+}
+
+function brushend() {
+  svg.classed("selecting", !d3.event.target.empty());
+}
+
