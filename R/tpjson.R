@@ -8,7 +8,7 @@ tpjson <- function(env){
   
   if ("dat" %in% names(params)){
     params[["dat"]] <- eval(as.name(params[["dat"]]), envir=.GlobalEnv)
-    nums <- match(c("from", "to"), names(params), nomatch=0)
+    nums <- match(c("from", "to", "nBins"), names(params), nomatch=0)
     #print(list(nums=nums, params=params))
     params[nums] <- lapply(params[nums], as.numeric)
     params["decreasing"] <- !params["decreasing"] %in% c("false")

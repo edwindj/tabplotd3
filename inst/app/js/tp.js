@@ -5,11 +5,12 @@ tp.settings = { from : 0
               };
 			  
 var varss;
+var svg;
 
 function draw(json){
 	varss = json;
 	
-	var w = $("body").width() - 40,
+	var w = $("body").width() - 60,
 		h = 600,
 		x = d3.scale.linear()
 		      .domain([0, 1])
@@ -20,6 +21,7 @@ function draw(json){
 		z = d3.scale.linear()
 		      .domain([0, 1])
 		      .range(["white", "steelblue"]);
+          
 		
 	yAxis = d3.svg.axis()
       .ticks(10)
@@ -28,11 +30,10 @@ function draw(json){
       ;
 	yAxis.scale().domain([ tp.settings.from/100, tp.settings.to/100]).range([0,h]);
 		
-   var body = d3.select("body");
+  var body = d3.select("body");
 	
-	
-	var svg = body.select("svg")
-      .attr("width", w + 40)
+	svg = body.select("svg")
+      .attr("width", w + 60)
 	   .attr("height", h + 50)
       .call(d3.behavior.zoom().y(yAxis.scale()).on("zoom", zoom));
    ;
@@ -41,7 +42,7 @@ function draw(json){
 	var vis = svg.select("#vis").text("");
 
 	svg.select("g.y.axis")
-		  .attr("transform", "translate(10,0)")
+		  .attr("transform", "translate(15,0)")
 		  .call(yAxis);	
 
     var vars = d3.keys(json.vars);
@@ -73,7 +74,7 @@ function draw(json){
    name.exit().remove();
    
    name.each(function(d){
-      var option = {icons:{}};
+      var option = {icons:{secondary: "ui-icon-triangle-2-n-s"}};
 	  
 	  if (d === tp.settings.sortCol){
         if (!tp.settings.decreasing){
@@ -90,7 +91,7 @@ function draw(json){
      .data(vars);
 	 
    cols.enter().append("g")
-    .classed("columns", true)
+     .classed("column", true)
 	 .classed("numeric", function(d) {return json.vars[d].mean})
 	 .classed("categorical", function(d) {return !json.vars[d].mean})
 	 ;
@@ -105,5 +106,31 @@ function draw(json){
        cut = json.vars[v];
        catvar(json.vars[v], vis, sc_vars(i), sc_vars.rangeBand(), h, y);
      }
-   }   
+   }
+
+   $('rect').tipsy({
+        gravity: 'w'
+	  });
+    
+  vis.append("g")
+    .attr("class", "brush")
+    .call(d3.svg.brush().y(y)
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend))
+   
+}
+
+function brushstart() {
+  svg.classed("selecting", true);
+}
+
+function brushmove() {
+  var s = d3.event.target.extent();
+  console.log(s);
+  symbol.classed("selected", function(d) { return s[0] <= (d = x(d)) && d <= s[1]; });
+}
+
+function brushend() {
+  svg.classed("selecting", !d3.event.target.empty());
 }

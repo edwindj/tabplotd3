@@ -5,12 +5,18 @@
     <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
     <link type="text/css" href="css/smoothness/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
     <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-    <script type="text/javascript" src="js/d3.v2.js"></script>
-    <script type="text/javascript" src="js/d3.layout.min.js"></script>
-    <script type="text/javascript" src="js/numericvar.js"></script>
+    
+	<link type="text/css" href="css/tipsy.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/jquery.tipsy.js"></script>
+    
+	<script type="text/javascript" src="js/d3.v2.min.js"></script>
+  <!--  <script type="text/javascript" src="js/d3.layout.min.js"></script> -->
+    
+	<script type="text/javascript" src="js/numericvar.js"></script>
     <script type="text/javascript" src="js/tp.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
-    <style type="text/css">
+    
+	<style type="text/css">
 
 body {
   font: 10px sans-serif;
@@ -61,7 +67,6 @@ input {
   <body>
   <script type="text/javascript">
 $(window).load(function(){
-
      $("#from_to").slider({
 			range: true,
 			values:[0,100],
@@ -109,7 +114,7 @@ $(window).load(function(){
          <div style="display:inline" id="offset"></div>
      </div>
      <svg>
-       <g transform="translate(30,30)">
+       <g transform="translate(50,30)">
          <g id="vis"></g>
          <g class="y axis"></g>
        </g>
