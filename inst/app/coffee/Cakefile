@@ -1,0 +1,32 @@
+fs     = require 'fs'
+{exec} = require 'child_process'
+
+option '-f', '--file [FILE]', 'filename for output'
+
+appFiles  = [
+  # omit src/ and .coffee to make the below lines a little shorter
+  'tableplot'
+]
+
+task 'build', 'Build single application file from source files', (options) ->
+  appContents = new Array remaining = appFiles.length
+  for file, index in appFiles then do (file, index) ->
+    fs.readFile "#{file}.coffee", 'utf8', (err, fileContents) ->
+      throw err if err
+      appContents[index] = fileContents
+      process() if --remaining is 0
+  process = ->
+    filename = "#{options.file or '../app'}.coffee"
+    fs.writeFile filename, appContents.join('\n\n'), 'utf8', (err) ->
+      throw err if err
+      exec "coffee --output ../js --compile #{filename} ", (err, stdout, stderr) ->
+        throw err if err
+        console.log stdout + stderr
+        fs.unlink filename, (err) ->
+          throw err if err
+          console.log 'Done.'
+
+task 'minify', 'Build and minify application file from source files', (options) ->
+  invoke "build"
+  filename = "#{options.file or '../app'}.coffee"
+  exec 'uglifyjs ../js/app.js > ../js/app.min.js'
