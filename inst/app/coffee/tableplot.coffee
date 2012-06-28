@@ -1,8 +1,9 @@
 ###
-Comments
 ###
 
 @tp ?= {}
+
+@tp.settings ?= {}
 
 tp.tableplot = () ->
 	margin = top: 0, bottom: 0,	left: 60, right: 0
@@ -13,29 +14,27 @@ tp.tableplot = () ->
 	x = d3.scale.linear()
 	      .domain([0,1])
 	y = d3.scale.ordinal()
-	z = d3.scale.linear()
-	      .domain([0, 1])
-	      .range(["white", "steelblue"])
+	colScale = d3.scale.linear()
+	           .domain([0, 1])
+	           .range(["white", "steelblue"])
 
-	tableplot = (selection) ->
-		selection.each (d,i) ->
+	tableplot = {}
 
 	tableplot.width = (w) ->
-		if arguments.length
+		if w?
 			width = w
 			tableplot
 		else
 			width
 
 	tableplot.height = (h) ->
-		if arguments.length
+		if h?
 			height = h
 			tableplot
 		else
 			height
 
-
-	draw = (data) ->
+	tableplot.draw = (data) ->
 		w = width - (margin.left +  margin.right)
 		h = height - (margin.top + margin.bottom)
 
@@ -44,18 +43,15 @@ tp.tableplot = () ->
 		     .rangeBands([0, h])
 
 		vars = d3.keys data.vars
-		vis = d3.select this
-
-		cols = vis.selectAll("g.columns").data(vars)
-
-		types = for k, v of data.vars
-		  if v.mean? then "numeric" else "categorical"
+		vis = d3.select("#vis")
+		
+		cols = vis.selectAll("g.column").data(data)
 
 		cols.enter().append("g")
 		   .classed("column", true)
-		   .classed("numeric", (d) -> data.vars[d].mean?)
-		   .classed("categorical", (d) -> data.vars[d].categories?)
-
+		   .attr("transform", (d,i) -> "translate(#{y(i)})")
+		   .append("rect")
+		   
 		cols.exit().remove()
 
 		for k, v of data.vars
@@ -68,3 +64,6 @@ tp.tableplot = () ->
 
 numColumn = (data, xScale, yScale) ->
 catColumn = (data, xScale, yScale) -> 
+
+@draw = (data) ->
+	tp.tableplot().draw(data)
