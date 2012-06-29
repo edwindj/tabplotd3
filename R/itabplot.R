@@ -39,7 +39,7 @@ itabplot <- function(x, ...){
                                  )
                     , URLMap$new( '^/json' = tpjson
                                   #, ".*" = Redirect$new("/tableplot.html")
-                                  , ".*" = Redirect$new("/tableplot2.html")
+                                  , ".*" = Redirect$new("/tableplot.html")
                                 )
                     )
   s$launch( app=app
