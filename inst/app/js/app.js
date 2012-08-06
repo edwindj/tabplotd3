@@ -5,14 +5,16 @@
 
 
 (function() {
-  var catColumn, numColumn, _base, _ref, _ref1;
+  var catColumn, numColumn, tp, _ref, _ref1;
 
   if ((_ref = this.tp) == null) {
     this.tp = {};
   }
 
-  if ((_ref1 = (_base = this.tp).settings) == null) {
-    _base.settings = {};
+  tp = this.tp;
+
+  if ((_ref1 = tp.settings) == null) {
+    tp.settings = {};
   }
 
   tp.tableplot = function() {
@@ -76,7 +78,93 @@
   catColumn = function(data, xScale, yScale) {};
 
   this.draw = function(data) {
-    return tp.tableplot().draw(data);
+    var bb, binScale, clmScale, colScale, column, columns, header, headers, height, plots, rb, values, vars, vis, width;
+    width = 1024;
+    height = 600;
+    vars = d3.keys(data.vars);
+    values = d3.values(data.vars);
+    clmScale = d3.scale.ordinal().domain(vars).rangeBands([0, width]);
+    rb = clmScale.rangeBand();
+    binScale = d3.scale.linear().domain([0, data.nBins]).range([0, height]);
+    bb = height / data.nBins;
+    colScale = d3.scale.linear().range(["white", "steelblue"]);
+    console.log(vars);
+    vis = d3.select("#plot").append("table").classed("tableplot", true);
+    header = vis.append("tr").classed("header", true);
+    column = vis.append("tr").classed("column", true);
+    headers = header.selectAll("td").data(vars);
+    headers.enter().append("td").append("button").style("width", "100%").style("height", "3em").text(function(d) {
+      return d;
+    }).each(function(d) {
+      var option;
+      option = {
+        icons: {
+          secondary: "ui-icon-triangle-2-n-s"
+        }
+      };
+      return $(this).button(option);
+    });
+    headers.exit().remove();
+    columns = column.selectAll("td").data(vars);
+    columns.enter().append("td").append("svg").attr("width", rb).attr("height", height).each(function() {
+      return d3.select(this).append("rect").attr("width", "100%").attr("height", "100%").classed("panel", true);
+    }).append("g").classed("plot", true).datum(function(d, i) {
+      return values[i];
+    });
+    plots = columns.selectAll("g.plot");
+    plots.filter(function(d) {
+      return d.mean != null;
+    }).each(function(d, i) {
+      var g, vals, xScale, zero;
+      xScale = d3.scale.linear().domain(d3.extent(d.mean.concat(0))).range([0, rb]);
+      zero = xScale(0);
+      g = d3.select(this);
+      vals = g.selectAll("g.value").data(d.mean);
+      vals.enter().append("g").classed("value", true).append("rect").attr("title", function(d, i) {
+        return "value = " + d;
+      }).attr("width", function(d) {
+        return xScale(d) - zero;
+      }).attr("x", zero).attr("height", bb).attr("y", function(_, i) {
+        return binScale(i);
+      }).attr("fill", function(_, i) {
+        return colScale(d.compl[i]);
+      });
+    });
+    return plots.filter(function(d) {
+      return !(d.mean != null);
+    }).each(function(d, i) {
+      var bars, cats, g, vals, xScale;
+      cats = d.categories;
+      colScale = d3.scale.ordinal().domain(d.categories).range(d.palet);
+      xScale = d3.scale.linear().range([0, rb]);
+      g = d3.select(this);
+      vals = g.selectAll("g.value").data(d.freq);
+      vals.enter().append("g").classed("value", true).attr("transform", function(_, i) {
+        return "translate(0, " + (binScale(i)) + ")";
+      });
+      vals.exit().remove();
+      bars = vals.selectAll("rect.freq").data(function(d, i) {
+        return d3.zip(d, offset(d));
+      });
+      bars.enter().append("rect").classed("freq", true).attr("fill", function(_, i) {
+        return colScale(i);
+      }).attr("width", function(f) {
+        return xScale(f[0]);
+      }).attr("x", function(f) {
+        return xScale(f[1]);
+      }).attr("height", bb);
+    });
+  };
+
+  this.offset = function(a) {
+    var cs, i;
+    cs = [0];
+    i = 1;
+    while (i < a.length) {
+      cs[i] = cs[i - 1] + a[i - 1];
+      i += 1;
+    }
+    return cs;
   };
 
 }).call(this);

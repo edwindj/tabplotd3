@@ -64,7 +64,9 @@ input {
   </head>
   <body>
   <script type="text/javascript">
+
   $(window).load(function(){
+     
      $("#from_to").slider({
 			range: true,
 			values:[0,100],
@@ -97,6 +99,7 @@ input {
 	  $.extend(tp.settings, <%= toJSON(req$GET()) %>);
     
     d3.json("json?dat=<%= xlit%>", draw);
+
 });
   
   </script>
@@ -106,18 +109,8 @@ input {
         <input id="from" type="text" value=0 />% - 
         <input id="to" type="text" value=100 />%
 	 	<div id="from_to" style="width:80%"/>
-     </div>
-     <hr />
-     <div class="vars">
-         <div style="display:inline" id="offset"></div>
-     </div>
-     <svg>
-       <g transform="translate(50,30)">
-         <g id="vis"></g>
-         <g class="y axis"></g>
-       </g>
-	   <g id="legend"></g>
-     </svg>
+    </div>
+    <hr />
   </div>
   
   </body>
