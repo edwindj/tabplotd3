@@ -5,7 +5,10 @@
 
 tp = @tp
 
-tp.settings ?= {}
+settings = tp.settings ?= {}
+settings.sortCol ?= 0
+settings.from ?= 0
+settings.to ?= 100
 
 tp.tableplot = () ->
 	margin = top: 0, bottom: 0,	left: 60, right: 0
@@ -64,12 +67,12 @@ tp.tableplot = () ->
 		return
 	return tableplot
 
-numColumn = (data, xScale, yScale) ->
-catColumn = (data, xScale, yScale) -> 
+yScale = null
 
 @draw = (data) ->
 	width = 1024
 	height = 600
+	margin = top: 0, bottom: 0,	left: 60, right: 0
 
 	vars = d3.keys data.vars
 	values = d3.values data.vars
@@ -82,13 +85,18 @@ catColumn = (data, xScale, yScale) ->
 	binScale = d3.scale.linear()
 	   .domain([0, data.nBins])
 	   .range([0,height])
+
+	yScale = d3.scale.linear()
+		.domain([settings.from/100, settings.to/100])
+		.range([0,height])
+
+
 	bb = height / data.nBins
 
 	colScale = d3.scale.linear()
 	   .range(["white", "steelblue"])
 
-	console.log vars
-
+    d3.select("table.tableplot").remove()
 	vis = d3.select("#plot").append("table").classed("tableplot", true)
 	header = vis.append("tr").classed("header", true)
 	column = vis.append("tr").classed("column", true)
@@ -100,12 +108,14 @@ catColumn = (data, xScale, yScale) ->
 		.append("button")
 		.style("width", "100%")
 		.style("height", "3em")
+		.on("click", sortVar)
 		.text((d) -> d)
-		.each((d) -> 
+		.each((d) ->
 			option = {icons:{secondary: "ui-icon-triangle-2-n-s"}}
+			if d is settings.sortCol
+				option.icons.secondary = if settings.decreasing then "ui-icon-triangle-1-s" else "ui-icon-triangle-1-n" 
 			$(this).button(option)
 		)
-	
 	headers.exit().remove()
 
 	columns = column.selectAll("td").data(vars)
@@ -115,6 +125,7 @@ catColumn = (data, xScale, yScale) ->
 	   .append("svg")
 	   .attr("width",  rb)
 	   .attr("height", height)
+	   .style("cursor", "row-resize")
 	   .each(() -> 
 	   		d3.select(this)
 	   			.append("rect")
@@ -148,48 +159,49 @@ catColumn = (data, xScale, yScale) ->
 			.attr("x", zero)
 			.attr("height", bb)
 			.attr("y", (_,i) -> binScale(i))
-			.attr("fill", (_,i) -> colScale(d.compl[i]))
-		
+			.attr("fill", (_,i) -> colScale(d.compl[i]))		
 		return
 	)
 	
 	plots.filter((d) -> not d.mean?)
-		.each((d,i) ->
-			cats = d.categories
+		.call(catColumn, rb, bb, binScale)
 
-			colScale = d3.scale.ordinal()
-				.domain(d.categories)
-				.range(d.palet)
-
-			xScale = d3.scale.linear()
-				.range([0,rb])
-
-			g = d3.select(this)
-			vals = g.selectAll("g.value").data(d.freq)
-
-			vals.enter().append("g")
-				.classed("value", true)
-				.attr("transform", (_,i) -> "translate(0, #{binScale(i)})")
-			
-			vals.exit().remove()
-
-			bars = vals.selectAll("rect.freq").data((d,i) ->
-				d3.zip d, offset(d)
-				)
-
-			bars.enter().append("rect")
-				.classed("freq", true)
-				.attr("fill", (_,i) -> colScale i)
-				.attr("width", (f) -> xScale(f[0]))
-				.attr("x", (f) -> xScale(f[1]))
-				.attr("height", bb)
-			return
-		)
+	plots.call(d3.behavior.zoom().y(yScale).on("zoom", zoom))
 
 @offset = (a) ->
 	cs = [0]
-	i = 1
-	while i < a.length
+	for i in [1..a.length]
 		cs[i] = cs[i-1] + a[i-1]
-		i += 1
 	cs
+
+catColumn = (plots, rb, bb, binScale) ->
+	plots.each((d,i) -> 
+		cats = d.categories
+		colScale = d3.scale.ordinal()
+			.domain(d.categories)
+			.range(d.palet)
+
+		xScale = d3.scale.linear()
+			.range([0,rb])
+
+		g = d3.select(this)
+		vals = g.selectAll("g.value").data(d.freq)
+
+		vals.enter().append("g")
+			.classed("value", true)
+			.attr("transform", (_,i) -> "translate(0, #{binScale(i)})")
+
+		vals.exit().remove()
+
+		bars = vals.selectAll("rect.freq").data((d,i) ->
+			d3.zip d, offset(d)
+			)
+
+		bars.enter().append("rect")
+			.classed("freq", true)
+			.attr("fill", (_,i) -> colScale i)
+			.attr("width", (f) -> xScale(f[0]))
+			.attr("x", (f) -> xScale(f[1]))
+			.attr("height", bb)
+			return
+		)

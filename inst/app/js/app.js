@@ -5,7 +5,7 @@
 
 
 (function() {
-  var catColumn, numColumn, tp, _ref, _ref1;
+  var catColumn, redraw, settings, sortVar, tp, yScale, zoom, _ref, _ref1, _ref2, _ref3, _ref4;
 
   if ((_ref = this.tp) == null) {
     this.tp = {};
@@ -13,8 +13,18 @@
 
   tp = this.tp;
 
-  if ((_ref1 = tp.settings) == null) {
-    tp.settings = {};
+  settings = (_ref1 = tp.settings) != null ? _ref1 : tp.settings = {};
+
+  if ((_ref2 = settings.sortCol) == null) {
+    settings.sortCol = 0;
+  }
+
+  if ((_ref3 = settings.from) == null) {
+    settings.from = 0;
+  }
+
+  if ((_ref4 = settings.to) == null) {
+    settings.to = 100;
   }
 
   tp.tableplot = function() {
@@ -48,7 +58,7 @@
       }
     };
     tableplot.draw = function(data) {
-      var cols, h, k, v, vars, vis, w, _ref2;
+      var cols, h, k, v, vars, vis, w, _ref5;
       w = width - (margin.left + margin.right);
       h = height - (margin.top + margin.bottom);
       x = x.range([0, w]);
@@ -60,9 +70,9 @@
         return "translate(" + (y(i)) + ")";
       }).append("rect");
       cols.exit().remove();
-      _ref2 = data.vars;
-      for (k in _ref2) {
-        v = _ref2[k];
+      _ref5 = data.vars;
+      for (k in _ref5) {
+        v = _ref5[k];
         if (v.mean != null) {
           numColumn(v);
         } else {
@@ -73,27 +83,32 @@
     return tableplot;
   };
 
-  numColumn = function(data, xScale, yScale) {};
-
-  catColumn = function(data, xScale, yScale) {};
+  yScale = null;
 
   this.draw = function(data) {
-    var bb, binScale, clmScale, colScale, column, columns, header, headers, height, plots, rb, values, vars, vis, width;
+    var bb, binScale, clmScale, colScale, column, columns, header, headers, height, margin, plots, rb, values, vars, vis, width;
     width = 1024;
     height = 600;
+    margin = {
+      top: 0,
+      bottom: 0,
+      left: 60,
+      right: 0
+    };
     vars = d3.keys(data.vars);
     values = d3.values(data.vars);
     clmScale = d3.scale.ordinal().domain(vars).rangeBands([0, width]);
     rb = clmScale.rangeBand();
     binScale = d3.scale.linear().domain([0, data.nBins]).range([0, height]);
+    yScale = d3.scale.linear().domain([settings.from / 100, settings.to / 100]).range([0, height]);
     bb = height / data.nBins;
     colScale = d3.scale.linear().range(["white", "steelblue"]);
-    console.log(vars);
+    d3.select("table.tableplot").remove();
     vis = d3.select("#plot").append("table").classed("tableplot", true);
     header = vis.append("tr").classed("header", true);
     column = vis.append("tr").classed("column", true);
     headers = header.selectAll("td").data(vars);
-    headers.enter().append("td").append("button").style("width", "100%").style("height", "3em").text(function(d) {
+    headers.enter().append("td").append("button").style("width", "100%").style("height", "3em").on("click", sortVar).text(function(d) {
       return d;
     }).each(function(d) {
       var option;
@@ -102,11 +117,14 @@
           secondary: "ui-icon-triangle-2-n-s"
         }
       };
+      if (d === settings.sortCol) {
+        option.icons.secondary = settings.decreasing ? "ui-icon-triangle-1-s" : "ui-icon-triangle-1-n";
+      }
       return $(this).button(option);
     });
     headers.exit().remove();
     columns = column.selectAll("td").data(vars);
-    columns.enter().append("td").append("svg").attr("width", rb).attr("height", height).each(function() {
+    columns.enter().append("td").append("svg").attr("width", rb).attr("height", height).style("cursor", "row-resize").each(function() {
       return d3.select(this).append("rect").attr("width", "100%").attr("height", "100%").classed("panel", true);
     }).append("g").classed("plot", true).datum(function(d, i) {
       return values[i];
@@ -130,10 +148,24 @@
         return colScale(d.compl[i]);
       });
     });
-    return plots.filter(function(d) {
+    plots.filter(function(d) {
       return !(d.mean != null);
-    }).each(function(d, i) {
-      var bars, cats, g, vals, xScale;
+    }).call(catColumn, rb, bb, binScale);
+    return plots.call(d3.behavior.zoom().y(yScale).on("zoom", zoom));
+  };
+
+  this.offset = function(a) {
+    var cs, i, _i, _ref5;
+    cs = [0];
+    for (i = _i = 1, _ref5 = a.length; 1 <= _ref5 ? _i <= _ref5 : _i >= _ref5; i = 1 <= _ref5 ? ++_i : --_i) {
+      cs[i] = cs[i - 1] + a[i - 1];
+    }
+    return cs;
+  };
+
+  catColumn = function(plots, rb, bb, binScale) {
+    return plots.each(function(d, i) {
+      var bars, cats, colScale, g, vals, xScale;
       cats = d.categories;
       colScale = d3.scale.ordinal().domain(d.categories).range(d.palet);
       xScale = d3.scale.linear().range([0, rb]);
@@ -156,15 +188,36 @@
     });
   };
 
-  this.offset = function(a) {
-    var cs, i;
-    cs = [0];
-    i = 1;
-    while (i < a.length) {
-      cs[i] = cs[i - 1] + a[i - 1];
-      i += 1;
+  redraw = function() {
+    var key, params, value;
+    params = (function() {
+      var _ref5, _results;
+      _ref5 = tp.settings;
+      _results = [];
+      for (key in _ref5) {
+        value = _ref5[key];
+        _results.push("" + key + "=" + value);
+      }
+      return _results;
+    })();
+    d3.select("table.tableplot").style("cursor", "wait");
+    d3.json("json?" + params.join("&"), draw);
+  };
+
+  sortVar = function(e) {
+    if (tp.settings.sortCol === e) {
+      tp.settings.decreasing = !tp.settings.decreasing;
     }
-    return cs;
+    tp.settings.sortCol = e;
+    return redraw();
+  };
+
+  zoom = function() {
+    var d;
+    d = yScale.domain();
+    tp.settings.from = d[0] * 100;
+    tp.settings.to = d[1] * 100;
+    return redraw();
   };
 
 }).call(this);

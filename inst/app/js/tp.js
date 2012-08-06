@@ -34,7 +34,7 @@ function draw(json){
 	
 	svg = body.select("svg")
       .attr("width", w + 60)
-	   .attr("height", h + 50)
+	    .attr("height", h + 50)
       .call(d3.behavior.zoom().y(yAxis.scale()).on("zoom", zoom));
    ;
    
