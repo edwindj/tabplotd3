@@ -1,32 +1,25 @@
-fs     = require 'fs'
 {exec} = require 'child_process'
 
-option '-f', '--file [FILE]', 'filename for output'
+option '-f', '--file [FILE]', 'filename for output, without extension'
+option '-m', '--minify [true]', 'should file be minified after building?'
 
 appFiles  = [
   # omit src/ and .coffee to make the below lines a little shorter
-  'tableplot'
+  'tableplot', 'utils'
 ]
 
 task 'build', 'Build single application file from source files', (options) ->
-  appContents = new Array remaining = appFiles.length
-  for file, index in appFiles then do (file, index) ->
-    fs.readFile "#{file}.coffee", 'utf8', (err, fileContents) ->
-      throw err if err
-      appContents[index] = fileContents
-      process() if --remaining is 0
-  process = ->
-    filename = "#{options.file or '../app'}.coffee"
-    fs.writeFile filename, appContents.join('\n\n'), 'utf8', (err) ->
-      throw err if err
-      exec "coffee --output ../js --compile #{filename} ", (err, stdout, stderr) ->
-        throw err if err
-        console.log stdout + stderr
-        fs.unlink filename, (err) ->
-          throw err if err
-          console.log 'Done.'
+  filename = "#{options.file or '../js/app'}.js"
+  minify = options.minify
+  
+  exec "coffee -j #{filename} --compile #{appFiles.join ' '} ", (err, stdout, stderr) ->
+    throw err if err
+    console.log stdout + stderr
+    console.log 'Finished building.'
 
-task 'minify', 'Build and minify application file from source files', (options) ->
-  invoke "build"
-  filename = "#{options.file or '../app'}.coffee"
-  exec 'uglifyjs ../js/app.js > ../js/app.min.js'
+task 'minify', 'Minify application file', (options) ->
+  filename = "#{options.file or '../js/app'}.js"
+  exec "uglifyjs --overwrite #{filename}", (err, stdout, stderr) ->
+    throw err if err
+    console.log stdout + stderr
+    console.log 'Finished minifying.'

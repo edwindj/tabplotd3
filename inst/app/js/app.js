@@ -7,11 +7,7 @@
 (function() {
   var catColumn, redraw, settings, sortVar, tp, yScale, zoom, _ref, _ref1, _ref2, _ref3, _ref4;
 
-  if ((_ref = this.tp) == null) {
-    this.tp = {};
-  }
-
-  tp = this.tp;
+  tp = (_ref = this.tp) != null ? _ref : this.tp = {};
 
   settings = (_ref1 = tp.settings) != null ? _ref1 : tp.settings = {};
 
@@ -40,24 +36,7 @@
     x = d3.scale.linear().domain([0, 1]);
     y = d3.scale.ordinal();
     colScale = d3.scale.linear().domain([0, 1]).range(["white", "steelblue"]);
-    tableplot = {};
-    tableplot.width = function(w) {
-      if (w != null) {
-        width = w;
-        return tableplot;
-      } else {
-        return width;
-      }
-    };
-    tableplot.height = function(h) {
-      if (h != null) {
-        height = h;
-        return tableplot;
-      } else {
-        return height;
-      }
-    };
-    tableplot.draw = function(data) {
+    tableplot = function(data) {
       var cols, h, k, v, vars, vis, w, _ref5;
       w = width - (margin.left + margin.right);
       h = height - (margin.top + margin.bottom);
@@ -78,6 +57,22 @@
         } else {
           catColumn(v);
         }
+      }
+    };
+    tableplot.width = function(w) {
+      if (w != null) {
+        width = w;
+        return tableplot;
+      } else {
+        return width;
+      }
+    };
+    tableplot.height = function(h) {
+      if (h != null) {
+        height = h;
+        return tableplot;
+      } else {
+        return height;
       }
     };
     return tableplot;
@@ -151,7 +146,7 @@
     plots.filter(function(d) {
       return !(d.mean != null);
     }).call(catColumn, rb, bb, binScale);
-    return plots.call(d3.behavior.zoom().y(yScale).on("zoom", zoom));
+    return vis.call(d3.behavior.zoom().y(yScale).on("zoom", zoom));
   };
 
   this.offset = function(a) {
@@ -209,6 +204,8 @@
       tp.settings.decreasing = !tp.settings.decreasing;
     }
     tp.settings.sortCol = e;
+    tp.settings.from = 0;
+    tp.settings.to = 100;
     return redraw();
   };
 

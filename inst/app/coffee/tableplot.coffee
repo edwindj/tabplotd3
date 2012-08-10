@@ -1,11 +1,9 @@
 ###
 ###
 
-@tp ?= {}
-
-tp = @tp
-
+tp = @tp ?= {}
 settings = tp.settings ?= {}
+
 settings.sortCol ?= 0
 settings.from ?= 0
 settings.to ?= 100
@@ -19,27 +17,12 @@ tp.tableplot = () ->
 	x = d3.scale.linear()
 	      .domain([0,1])
 	y = d3.scale.ordinal()
+
 	colScale = d3.scale.linear()
 	           .domain([0, 1])
 	           .range(["white", "steelblue"])
 
-	tableplot = {}
-
-	tableplot.width = (w) ->
-		if w?
-			width = w
-			tableplot
-		else
-			width
-
-	tableplot.height = (h) ->
-		if h?
-			height = h
-			tableplot
-		else
-			height
-
-	tableplot.draw = (data) ->
+	tableplot = (data) ->
 		w = width - (margin.left +  margin.right)
 		h = height - (margin.top + margin.bottom)
 
@@ -65,6 +48,21 @@ tp.tableplot = () ->
 		  else
 		    catColumn v
 		return
+
+	tableplot.width = (w) ->
+		if w?
+			width = w
+			tableplot
+		else
+			width
+
+	tableplot.height = (h) ->
+		if h?
+			height = h
+			tableplot
+		else
+			height
+
 	return tableplot
 
 yScale = null
@@ -121,21 +119,21 @@ yScale = null
 	columns = column.selectAll("td").data(vars)
 
 	columns.enter()
-	   .append("td")
-	   .append("svg")
-	   .attr("width",  rb)
-	   .attr("height", height)
-	   .style("cursor", "row-resize")
-	   .each(() -> 
-	   		d3.select(this)
-	   			.append("rect")
-	   			.attr("width","100%")
-	   			.attr("height", "100%")
-	   			.classed("panel", true)
-	   )
-	   .append("g")
-	   .classed("plot", true)
-	   .datum((d,i) -> values[i])   
+	.append("td")
+	.append("svg")
+	  .attr("width",  rb)
+	  .attr("height", height)
+	  .style("cursor", "row-resize")
+	.each(() -> 
+		d3.select(this)
+	   	.append("rect")
+	   		.attr("width","100%")
+	   		.attr("height", "100%")
+	   		.classed("panel", true)
+	)
+	.append("g")
+		.classed("plot", true)
+		.datum((d,i) -> values[i])   
 
 	plots = columns.selectAll("g.plot")
 
@@ -166,7 +164,7 @@ yScale = null
 	plots.filter((d) -> not d.mean?)
 		.call(catColumn, rb, bb, binScale)
 
-	plots.call(d3.behavior.zoom().y(yScale).on("zoom", zoom))
+	vis.call(d3.behavior.zoom().y(yScale).on("zoom", zoom))
 
 @offset = (a) ->
 	cs = [0]

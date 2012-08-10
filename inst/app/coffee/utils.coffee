@@ -7,6 +7,8 @@ redraw = ->
 sortVar = (e) ->
 	if tp.settings.sortCol is e then tp.settings.decreasing = not tp.settings.decreasing
 	tp.settings.sortCol = e
+	tp.settings.from = 0
+	tp.settings.to = 100
 	redraw()
 
 zoom = () ->
