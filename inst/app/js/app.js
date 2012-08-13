@@ -5,11 +5,13 @@
 
 
 (function() {
-  var catColumn, redraw, settings, sortVar, tp, yScale, zoom, _ref, _ref1, _ref2, _ref3, _ref4;
+  var catColumn, move, redraw, settings, sortVar, tp, yScale, zoom, _ref, _ref1, _ref2, _ref3, _ref4;
 
   tp = (_ref = this.tp) != null ? _ref : this.tp = {};
 
   settings = (_ref1 = tp.settings) != null ? _ref1 : tp.settings = {};
+
+  this.data;
 
   if ((_ref2 = settings.sortCol) == null) {
     settings.sortCol = 0;
@@ -119,7 +121,7 @@
     });
     headers.exit().remove();
     columns = column.selectAll("td").data(vars);
-    columns.enter().append("td").append("svg").attr("width", rb).attr("height", height).style("cursor", "row-resize").each(function() {
+    columns.enter().append("td").append("svg").attr("width", rb).attr("height", height).style("cursor", "all-scroll").each(function() {
       return d3.select(this).append("rect").attr("width", "100%").attr("height", "100%").classed("panel", true);
     }).append("g").classed("plot", true).datum(function(d, i) {
       return values[i];
@@ -146,7 +148,7 @@
     plots.filter(function(d) {
       return !(d.mean != null);
     }).call(catColumn, rb, bb, binScale);
-    return vis.call(d3.behavior.zoom().y(yScale).on("zoom", zoom));
+    return plots.call(d3.behavior.zoom().y(yScale).on("zoom", move));
   };
 
   this.offset = function(a) {
@@ -160,10 +162,12 @@
 
   catColumn = function(plots, rb, bb, binScale) {
     return plots.each(function(d, i) {
-      var bars, cats, colScale, g, vals, xScale;
+      var bars, cats, colScale, g, h, vals, xScale;
       cats = d.categories;
-      colScale = d3.scale.ordinal().domain(d.categories).range(d.palet);
-      xScale = d3.scale.linear().range([0, rb]);
+      console.log(d.palet, cats);
+      colScale = d3.scale.ordinal().domain(cats).range(d.palet.slice(0, cats.length + 1 || 9e9));
+      xScale = d3.scale.linear().range([0, 100]);
+      h = 100 / d.freq.length + "%";
       g = d3.select(this);
       vals = g.selectAll("g.value").data(d.freq);
       vals.enter().append("g").classed("value", true).attr("transform", function(_, i) {
@@ -174,12 +178,27 @@
         return d3.zip(d, offset(d));
       });
       bars.enter().append("rect").classed("freq", true).attr("fill", function(_, i) {
-        return colScale(i);
+        return colScale(cats[i]);
       }).attr("width", function(f) {
-        return xScale(f[0]);
+        return xScale(f[0]) + "%";
       }).attr("x", function(f) {
-        return xScale(f[1]);
-      }).attr("height", bb);
+        return xScale(f[1]) + "%";
+      }).attr("height", h);
+    });
+  };
+
+  move = function() {
+    var svg;
+    console.log(d3.event.scale);
+    return svg = d3.selectAll("g.plot").transition().attr("transform", "translate(0, " + d3.event.translate[1] + ") scale(1," + d3.event.scale + ")").each("end", function(_, i) {
+      var d;
+      if (i) {
+        return;
+      }
+      d = yScale.domain();
+      tp.settings.from = d[0] * 100;
+      tp.settings.to = d[1] * 100;
+      return redraw();
     });
   };
 
@@ -211,6 +230,9 @@
 
   zoom = function() {
     var d;
+    if ((d3.event.scale != null) && d3.event.scale === 1) {
+      return;
+    }
     d = yScale.domain();
     tp.settings.from = d[0] * 100;
     tp.settings.to = d[1] * 100;

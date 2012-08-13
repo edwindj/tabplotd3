@@ -4,6 +4,8 @@
 tp = @tp ?= {}
 settings = tp.settings ?= {}
 
+@data;
+
 settings.sortCol ?= 0
 settings.from ?= 0
 settings.to ?= 100
@@ -123,7 +125,7 @@ yScale = null
 	.append("svg")
 	  .attr("width",  rb)
 	  .attr("height", height)
-	  .style("cursor", "row-resize")
+	  .style("cursor", "all-scroll")
 	.each(() -> 
 		d3.select(this)
 	   	.append("rect")
@@ -164,7 +166,7 @@ yScale = null
 	plots.filter((d) -> not d.mean?)
 		.call(catColumn, rb, bb, binScale)
 
-	vis.call(d3.behavior.zoom().y(yScale).on("zoom", zoom))
+	plots.call(d3.behavior.zoom().y(yScale).on("zoom", move))
 
 @offset = (a) ->
 	cs = [0]
@@ -175,14 +177,17 @@ yScale = null
 catColumn = (plots, rb, bb, binScale) ->
 	plots.each((d,i) -> 
 		cats = d.categories
+		console.log d.palet, cats
 		colScale = d3.scale.ordinal()
-			.domain(d.categories)
-			.range(d.palet)
+			.domain(cats)
+			.range(d.palet[0..cats.length])
 
 		xScale = d3.scale.linear()
-			.range([0,rb])
+			.range([0,100])
 
-		g = d3.select(this)
+		h = 100/d.freq.length + "%"
+
+		g = d3.select(@)
 		vals = g.selectAll("g.value").data(d.freq)
 
 		vals.enter().append("g")
@@ -193,13 +198,14 @@ catColumn = (plots, rb, bb, binScale) ->
 
 		bars = vals.selectAll("rect.freq").data((d,i) ->
 			d3.zip d, offset(d)
-			)
+		)
+
 
 		bars.enter().append("rect")
 			.classed("freq", true)
-			.attr("fill", (_,i) -> colScale i)
-			.attr("width", (f) -> xScale(f[0]))
-			.attr("x", (f) -> xScale(f[1]))
-			.attr("height", bb)
+			.attr("fill", (_,i) -> colScale cats[i])
+			.attr("width", (f) -> xScale(f[0]) + "%")
+			.attr("x", (f) -> xScale(f[1]) + "%")
+			.attr("height", h)
 			return
 		)
