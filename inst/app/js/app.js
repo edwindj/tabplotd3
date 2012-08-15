@@ -161,34 +161,6 @@
     return cs;
   };
 
-  catColumn = function(plots, rb, bb, binScale) {
-    return plots.each(function(d, i) {
-      var bars, cats, colScale, g, h, vals, xAxis, xScale;
-      cats = d.categories;
-      colScale = d3.scale.ordinal().domain(cats).range(d.palet.slice(0, cats.length + 1 || 9e9));
-      xScale = d3.scale.linear().range([0, rb]);
-      xAxis = d3.svg.axis().scale(xScale);
-      h = 100 / d.freq.length + "%";
-      g = d3.select(this);
-      vals = g.selectAll("g.value").data(d.freq);
-      vals.enter().append("g").classed("value", true).attr("transform", function(_, i) {
-        return "translate(0, " + (binScale(i)) + ")";
-      });
-      vals.exit().remove();
-      bars = vals.selectAll("rect.freq").data(function(d, i) {
-        return d3.zip(d, offset(d));
-      });
-      bars.enter().append("rect").classed("freq", true).attr("fill", function(_, i) {
-        return colScale(cats[i]);
-      }).attr("width", function(f) {
-        return xScale(f[0]);
-      }).attr("x", function(f) {
-        return xScale(f[1]);
-      }).attr("height", h);
-      g.append("g").attr("class", "x axis").call(xAxis);
-    });
-  };
-
   move = function() {
     var svg;
     console.log(d3.event.scale, d3.event.translate);
@@ -240,6 +212,34 @@
     tp.settings.from = d[0] * 100;
     tp.settings.to = d[1] * 100;
     return redraw();
+  };
+
+  catColumn = function(plots, rb, bb, binScale) {
+    return plots.each(function(d, i) {
+      var bars, cats, colScale, g, h, vals, xAxis, xScale;
+      cats = d.categories;
+      colScale = d3.scale.ordinal().domain(cats).range(d.palet.slice(0, cats.length + 1 || 9e9));
+      xScale = d3.scale.linear().range([0, rb]);
+      xAxis = d3.svg.axis().scale(xScale);
+      h = 100 / d.freq.length + "%";
+      g = d3.select(this);
+      vals = g.selectAll("g.value").data(d.freq);
+      vals.enter().append("g").classed("value", true).attr("transform", function(_, i) {
+        return "translate(0, " + (binScale(i)) + ")";
+      });
+      vals.exit().remove();
+      bars = vals.selectAll("rect.freq").data(function(d, i) {
+        return d3.zip(d, offset(d));
+      });
+      bars.enter().append("rect").classed("freq", true).attr("fill", function(_, i) {
+        return colScale(cats[i]);
+      }).attr("width", function(f) {
+        return xScale(f[0]);
+      }).attr("x", function(f) {
+        return xScale(f[1]);
+      }).attr("height", h);
+      g.append("g").attr("class", "x axis").call(xAxis);
+    });
   };
 
 }).call(this);
