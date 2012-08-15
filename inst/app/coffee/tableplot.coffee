@@ -166,7 +166,12 @@ yScale = null
 	plots.filter((d) -> not d.mean?)
 		.call(catColumn, rb, bb, binScale)
 
-	plots.call(d3.behavior.zoom().y(yScale).on("zoom", move))
+	console.log(data)
+
+	plots.call( d3.behavior.zoom()
+		        .y(yScale)
+		        .scaleExtent([0,data.nBins])
+		        .on("zoom", move))
 
 @offset = (a) ->
 	cs = [0]

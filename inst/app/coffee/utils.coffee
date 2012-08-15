@@ -1,5 +1,5 @@
 move = () ->
-	console.log d3.event.scale
+	console.log d3.event.scale, d3.event.translate
 	svg = d3.selectAll("g.plot")
 	.transition()
 	  .attr("transform", "translate(0, #{d3.event.translate[1]}) scale(1,#{d3.event.scale})")
@@ -8,6 +8,7 @@ move = () ->
 		d = yScale.domain()
 		tp.settings.from = d[0]*100
 		tp.settings.to = d[1]*100
+		d3.selectAll("svg").style "cursor", "progress"
 		redraw()
 		)
 

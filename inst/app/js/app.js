@@ -148,7 +148,8 @@
     plots.filter(function(d) {
       return !(d.mean != null);
     }).call(catColumn, rb, bb, binScale);
-    return plots.call(d3.behavior.zoom().y(yScale).on("zoom", move));
+    console.log(data);
+    return plots.call(d3.behavior.zoom().y(yScale).scaleExtent([0, data.nBins]).on("zoom", move));
   };
 
   this.offset = function(a) {
@@ -189,7 +190,7 @@
 
   move = function() {
     var svg;
-    console.log(d3.event.scale);
+    console.log(d3.event.scale, d3.event.translate);
     return svg = d3.selectAll("g.plot").transition().attr("transform", "translate(0, " + d3.event.translate[1] + ") scale(1," + d3.event.scale + ")").each("end", function(_, i) {
       var d;
       if (i) {
@@ -198,6 +199,7 @@
       d = yScale.domain();
       tp.settings.from = d[0] * 100;
       tp.settings.to = d[1] * 100;
+      d3.selectAll("svg").style("cursor", "progress");
       return redraw();
     });
   };
