@@ -163,11 +163,11 @@
 
   catColumn = function(plots, rb, bb, binScale) {
     return plots.each(function(d, i) {
-      var bars, cats, colScale, g, h, vals, xScale;
+      var bars, cats, colScale, g, h, vals, xAxis, xScale;
       cats = d.categories;
-      console.log(d.palet, cats);
       colScale = d3.scale.ordinal().domain(cats).range(d.palet.slice(0, cats.length + 1 || 9e9));
-      xScale = d3.scale.linear().range([0, 100]);
+      xScale = d3.scale.linear().range([0, rb]);
+      xAxis = d3.svg.axis().scale(xScale);
       h = 100 / d.freq.length + "%";
       g = d3.select(this);
       vals = g.selectAll("g.value").data(d.freq);
@@ -181,10 +181,11 @@
       bars.enter().append("rect").classed("freq", true).attr("fill", function(_, i) {
         return colScale(cats[i]);
       }).attr("width", function(f) {
-        return xScale(f[0]) + "%";
+        return xScale(f[0]);
       }).attr("x", function(f) {
-        return xScale(f[1]) + "%";
+        return xScale(f[1]);
       }).attr("height", h);
+      g.append("g").attr("class", "x axis").call(xAxis);
     });
   };
 

@@ -181,14 +181,16 @@ yScale = null
 
 catColumn = (plots, rb, bb, binScale) ->
 	plots.each((d,i) -> 
+		
 		cats = d.categories
-		console.log d.palet, cats
 		colScale = d3.scale.ordinal()
 			.domain(cats)
 			.range(d.palet[0..cats.length])
 
 		xScale = d3.scale.linear()
-			.range([0,100])
+			.range([0,rb])
+
+		xAxis = d3.svg.axis().scale(xScale)
 
 		h = 100/d.freq.length + "%"
 
@@ -209,8 +211,12 @@ catColumn = (plots, rb, bb, binScale) ->
 		bars.enter().append("rect")
 			.classed("freq", true)
 			.attr("fill", (_,i) -> colScale cats[i])
-			.attr("width", (f) -> xScale(f[0]) + "%")
-			.attr("x", (f) -> xScale(f[1]) + "%")
+			.attr("width", (f) -> xScale(f[0]))
+			.attr("x", (f) -> xScale(f[1]))
 			.attr("height", h)
-			return
-		)
+
+		g.append("g")
+		  .attr("class","x axis")
+		  .call(xAxis)
+		return
+	)
