@@ -27,7 +27,6 @@ function zoomUpdate(){
    $( "#from" ).val(from);
    $( "#to" ).val(to);
    $("#from_to").slider("option", "values", [from,to]);
-   yAxis.scale().domain([from/100, to/100]);
 }
 
 function zoom(){

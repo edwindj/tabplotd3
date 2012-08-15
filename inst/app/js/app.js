@@ -5,7 +5,7 @@
 
 
 (function() {
-  var catColumn, move, redraw, settings, sortVar, tp, yScale, zoom, _ref, _ref1, _ref2, _ref3, _ref4;
+  var catColumn, hideScale, move, numColumn, settings, showScale, sortVar, tp, yScale, _ref, _ref1, _ref2, _ref3, _ref4;
 
   tp = (_ref = this.tp) != null ? _ref : this.tp = {};
 
@@ -129,26 +129,10 @@
     plots = columns.selectAll("g.plot");
     plots.filter(function(d) {
       return d.mean != null;
-    }).each(function(d, i) {
-      var g, vals, xScale, zero;
-      xScale = d3.scale.linear().domain(d3.extent(d.mean.concat(0))).range([0, rb]);
-      zero = xScale(0);
-      g = d3.select(this);
-      vals = g.selectAll("g.value").data(d.mean);
-      vals.enter().append("g").classed("value", true).append("rect").attr("title", function(d, i) {
-        return "value = " + d;
-      }).attr("width", function(d) {
-        return xScale(d) - zero;
-      }).attr("x", zero).attr("height", bb).attr("y", function(_, i) {
-        return binScale(i);
-      }).attr("fill", function(_, i) {
-        return colScale(d.compl[i]);
-      });
-    });
+    }).call(numColumn, rb, bb, binScale, colScale);
     plots.filter(function(d) {
       return !(d.mean != null);
     }).call(catColumn, rb, bb, binScale);
-    console.log(data);
     return plots.call(d3.behavior.zoom().y(yScale).scaleExtent([0, data.nBins]).on("zoom", move));
   };
 
@@ -165,20 +149,19 @@
     var svg;
     console.log(d3.event.scale, d3.event.translate);
     return svg = d3.selectAll("g.plot").transition().attr("transform", "translate(0, " + d3.event.translate[1] + ") scale(1," + d3.event.scale + ")").each("end", function(_, i) {
-      var d;
       if (i) {
         return;
       }
-      d = yScale.domain();
-      tp.settings.from = d[0] * 100;
-      tp.settings.to = d[1] * 100;
-      d3.selectAll("svg").style("cursor", "progress");
+      zoomUpdate(yScale.domain().map(function(d) {
+        return 100 * d;
+      }));
       return redraw();
     });
   };
 
-  redraw = function() {
+  this.redraw = function() {
     var key, params, value;
+    zoomUpdate();
     params = (function() {
       var _ref5, _results;
       _ref5 = tp.settings;
@@ -189,7 +172,7 @@
       }
       return _results;
     })();
-    d3.select("table.tableplot").style("cursor", "wait");
+    d3.selectAll("svg").style("cursor", "progress");
     d3.json("json?" + params.join("&"), draw);
   };
 
@@ -203,15 +186,29 @@
     return redraw();
   };
 
-  zoom = function() {
-    var d;
-    if ((d3.event.scale != null) && d3.event.scale === 1) {
-      return;
+  this.zoomUpdate = function(fromto) {
+    var from, to, _ref5;
+    if (fromto != null) {
+      tp.settings.from = fromto[0], tp.settings.to = fromto[1];
     }
-    d = yScale.domain();
-    tp.settings.from = d[0] * 100;
-    tp.settings.to = d[1] * 100;
-    return redraw();
+    _ref5 = [tp.settings.from, tp.settings.to], from = _ref5[0], to = _ref5[1];
+    from = tp.settings.from;
+    to = tp.settings.to;
+    $("#from").val(from);
+    $("#to").val(to);
+    return $("#from_to").slider("option", "values", [from, to]);
+  };
+
+  showScale = function() {
+    var g;
+    g = d3.select(this);
+    return g.selectAll("g.axis").style("display", null);
+  };
+
+  hideScale = function() {
+    var g;
+    g = d3.select(this);
+    return g.selectAll("g.axis").style("display", "none");
   };
 
   catColumn = function(plots, rb, bb, binScale) {
@@ -220,7 +217,7 @@
       cats = d.categories;
       colScale = d3.scale.ordinal().domain(cats).range(d.palet.slice(0, cats.length + 1 || 9e9));
       xScale = d3.scale.linear().range([0, rb]);
-      xAxis = d3.svg.axis().scale(xScale);
+      xAxis = d3.svg.axis().scale(xScale).ticks(5).tickFormat(d3.format("p"));
       h = 100 / d.freq.length + "%";
       g = d3.select(this);
       vals = g.selectAll("g.value").data(d.freq);
@@ -238,7 +235,39 @@
       }).attr("x", function(f) {
         return xScale(f[1]);
       }).attr("height", h);
-      g.append("g").attr("class", "x axis").call(xAxis);
+      g.append("g").attr("class", "x axis").call(xAxis).style("display", "none");
+      g.on("mouseenter", showScale).on("mouseleave", hideScale);
+    });
+  };
+
+  showScale = function() {
+    var g;
+    g = d3.select(this);
+    return g.selectAll("g.axis").style("display", null);
+  };
+
+  hideScale = function() {
+    var g;
+    g = d3.select(this);
+    return g.selectAll("g.axis").style("display", "none");
+  };
+
+  numColumn = function(plots, rb, bb, binScale, colScale) {
+    return plots.each(function(d, i) {
+      var g, vals, xScale, zero;
+      xScale = d3.scale.linear().domain(d3.extent(d.mean.concat(0))).range([0, rb]);
+      zero = xScale(0);
+      g = d3.select(this);
+      vals = g.selectAll("g.value").data(d.mean);
+      vals.enter().append("g").classed("value", true).append("rect").attr("title", function(d, i) {
+        return "value = " + d;
+      }).attr("width", function(d) {
+        return xScale(d) - zero;
+      }).attr("x", zero).attr("height", bb).attr("y", function(_, i) {
+        return binScale(i);
+      }).attr("fill", function(_, i) {
+        return colScale(d.compl[i]);
+      });
     });
   };
 

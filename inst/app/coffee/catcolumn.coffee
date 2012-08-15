@@ -9,7 +9,10 @@ catColumn = (plots, rb, bb, binScale) ->
 		xScale = d3.scale.linear()
 			.range([0,rb])
 
-		xAxis = d3.svg.axis().scale(xScale)
+		xAxis = d3.svg.axis()
+			.scale(xScale)
+			.ticks(5)
+			.tickFormat(d3.format("p"))
 
 		h = 100/d.freq.length + "%"
 
@@ -37,5 +40,18 @@ catColumn = (plots, rb, bb, binScale) ->
 		g.append("g")
 		  .attr("class","x axis")
 		  .call(xAxis)
+		  .style("display", "none")
+
+		#TODO move this to tableplot
+		g.on("mouseenter", showScale)
+		.on("mouseleave", hideScale)
 		return
 	)
+
+showScale = () ->
+	g = d3.select(this)
+	g.selectAll("g.axis").style("display", null)
+
+hideScale = () ->
+	g = d3.select(this)
+	g.selectAll("g.axis").style("display", "none")
