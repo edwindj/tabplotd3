@@ -68,6 +68,8 @@ tp.tableplot = () ->
 	return tableplot
 
 yScale = null
+yAxis = null
+yZoom = null
 
 @draw = (data) ->
 	width = 1024
@@ -102,6 +104,7 @@ yScale = null
 	column = vis.append("tr").classed("column", true)
 
 	headers = header.selectAll("td").data(vars)
+	header.append("td")
 	
 	headers.enter()
 		.append("td")
@@ -119,7 +122,10 @@ yScale = null
 	headers.exit().remove()
 
 	columns = column.selectAll("td").data(vars)
-
+	column.append("td")
+	  .append("svg")
+	  .attr("width", 50)
+	  .attr("height", height)
 	columns.enter()
 	.append("td")
 	.append("svg")
@@ -166,12 +172,16 @@ yScale = null
 	plots.filter((d) -> not d.mean?)
 		.call(catColumn, rb, bb, binScale)
 
-	console.log(data)
+	#console.log(data)
 
-	plots.call( d3.behavior.zoom()
-		        .y(yScale)
-		        .scaleExtent([0,data.nBins])
-		        .on("zoom", move))
+	yZoom = d3.behavior.zoom()
+		.y(yScale)
+		.scaleExtent([0,data.nBins])
+		.on("zoom", move)
+
+	plots.call(yZoom)
+
+	yAxis = addAxis()
 
 @offset = (a) ->
 	cs = [0]

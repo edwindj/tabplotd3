@@ -1,13 +1,26 @@
 move = () ->
-	console.log d3.event.scale, d3.event.translate
 	svg = d3.selectAll("g.plot")
-	.transition()
-	  .attr("transform", "translate(0, #{d3.event.translate[1]}) scale(1,#{d3.event.scale})")
+	axis = d3.selectAll(".y.axis")
+	
+	fromto = yScale.domain()
+	fromto = [d3.max([fromto[0], 0]), d3.min([fromto[1], 1])]
+	yScale.domain(fromto)
+
+	console.log fromto, d3.event.translate, yZoom.translate()
+	if d3.event.scale is 1
+		svg.attr("transform", "translate(0, #{d3.event.translate[1]})")
+		axis.call(yAxis)
+	
+	svg = svg.transition()
+	axis = axis.transition()
+	axis.call(yAxis)
+
+	svg.attr("transform", "translate(0, #{d3.event.translate[1]}) scale(1,#{d3.event.scale})")
 	.each("end",(_, i)->
 		return if i
 		d = yScale.domain()
-		tp.settings.from = d[0]*100
-		tp.settings.to = d[1]*100
+		tp.settings.from = d3.max([d[0]*100, 0])
+		tp.settings.to = d3.min([d[1]*100, 100])
 		d3.selectAll("svg").style "cursor", "progress"
 		redraw()
 		)
@@ -28,6 +41,6 @@ sortVar = (e) ->
 zoom = () ->
    if d3.event.scale? and d3.event.scale is 1 then return
    d = yScale.domain()
-   tp.settings.from = d[0]*100;
-   tp.settings.to = d[1]*100;
+   tp.settings.from = d3.max(d[0]*100, 0);
+   tp.settings.to = d3.min(d[1]*100, 100);
    redraw()
