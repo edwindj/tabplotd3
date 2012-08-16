@@ -7,7 +7,7 @@
     <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
     
 	  <link type="text/css" href="css/tipsy.css" rel="stylesheet" />
-    <script type="text/javascript" src="js/jquery.tipsy.js"></script>
+      <script type="text/javascript" src="js/jquery.tipsy.js"></script>
     
 	  <script type="text/javascript" src="js/d3.v2.min.js"></script>
     
@@ -96,22 +96,22 @@ input {
     });
     
     tp.settings.dat = '<%= xlit%>';
-	  $.extend(tp.settings, <%= toJSON(req$GET()) %>);
-    
+	$.extend(tp.settings, <%= toJSON(req$GET()) %>);
     d3.json("json?dat=<%= xlit%>", draw);
 
 });
   
   </script>
-    
+  <section>
   <div id="plot">
      <div class="controls"> 
+	 <h1> <%= xlit %>
         <input id="from" type="text" value=0 />% - 
         <input id="to" type="text" value=100 />%
-	 	<div id="from_to" style="width:80%"/>
+		</h1>
+	 	<div style="display:none" id="from_to" style="width:80%"/>
     </div>
-    <hr />
   </div>
-  
+  </section>
   </body>
 </html>

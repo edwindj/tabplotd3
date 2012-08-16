@@ -44,3 +44,11 @@ zoom = () ->
    tp.settings.from = d3.max(d[0]*100, 0);
    tp.settings.to = d3.min(d[1]*100, 100);
    redraw()
+
+@params = ((qs) ->
+	qs = qs.substr(1).split("&")
+	params = {}
+	sqs = (p.split('=') for p in qs)
+	params[p[0]] = decodeURIComponent p[1] for p in sqs
+	params
+)(window.location.search)

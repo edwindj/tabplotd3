@@ -267,4 +267,24 @@
     return redraw();
   };
 
+  this.params = (function(qs) {
+    var p, params, sqs, _i, _len;
+    qs = qs.substr(1).split("&");
+    params = {};
+    sqs = (function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = qs.length; _i < _len; _i++) {
+        p = qs[_i];
+        _results.push(p.split('='));
+      }
+      return _results;
+    })();
+    for (_i = 0, _len = sqs.length; _i < _len; _i++) {
+      p = sqs[_i];
+      params[p[0]] = decodeURIComponent(p[1]);
+    }
+    return params;
+  })(window.location.search);
+
 }).call(this);
