@@ -10,78 +10,23 @@ settings.sortCol ?= 0
 settings.from ?= 0
 settings.to ?= 100
 
-tp.tableplot = () ->
-	margin = top: 0, bottom: 0,	left: 60, right: 0
-
-	width = 800
-	height = 600
-	
-	x = d3.scale.linear()
-	      .domain([0,1])
-	y = d3.scale.ordinal()
-
-	colScale = d3.scale.linear()
-	           .domain([0, 1])
-	           .range(["white", "steelblue"])
-
-	tableplot = (data) ->
-		w = width - (margin.left +  margin.right)
-		h = height - (margin.top + margin.bottom)
-
-		x = x.range([0, w])
-		y = y.domain(d3.range(data.nBins))
-		     .rangeBands([0, h])
-
-		vars = d3.keys data.vars
-		vis = d3.select("#vis")
-		
-		cols = vis.selectAll("g.column").data(data)
-
-		cols.enter().append("g")
-		   .classed("column", true)
-		   .attr("transform", (d,i) -> "translate(#{y(i)})")
-		   .append("rect")
-		   
-		cols.exit().remove()
-
-		for k, v of data.vars
-		  if v.mean?
-		    numColumn v
-		  else
-		    catColumn v
-		return
-
-	tableplot.width = (w) ->
-		if w?
-			width = w
-			tableplot
-		else
-			width
-
-	tableplot.height = (h) ->
-		if h?
-			height = h
-			tableplot
-		else
-			height
-
-	return tableplot
-
 yScale = null
 yAxis = null
 yZoom = null
 
 @draw = (data) ->
-	width = 1024
-	height = 600
-	margin = top: 0, bottom: 0,	left: 60, right: 0
+	width = $("#plot").width()
+	console.log $(document).height(), $(window).height()
+	#width = 1024
+	height = $(document).height() - 150
+	margin = top: 0, bottom: 0,	left: 60, right: 20
 
 	vars = d3.keys data.vars
 	values = d3.values data.vars
 
 	clmScale = d3.scale.ordinal()
 		.domain(vars)
-		.rangeBands([0,width])
+		.rangeBands([margin.left,width - margin.right])
 	rb = clmScale.rangeBand()
 
 	binScale = d3.scale.linear()
@@ -91,6 +36,7 @@ yZoom = null
 	yScale = d3.scale.linear()
 		.domain([settings.from/100, settings.to/100])
 		.range([0,height])
+		.clamp(true)
 
 
 	bb = height / data.nBins

@@ -3,10 +3,10 @@ move = () ->
 	axis = d3.selectAll(".y.axis")
 	
 	fromto = yScale.domain()
-	fromto = [d3.max([fromto[0], 0]), d3.min([fromto[1], 1])]
-	yScale.domain(fromto)
+	#fromto = [d3.max([fromto[0], 0]), d3.min([fromto[1], 1])]
+	#yScale.domain(fromto)
 
-	console.log fromto, d3.event.translate, yZoom.translate()
+	#console.log fromto, d3.event.translate, yZoom.translate()
 	if d3.event.scale is 1
 		svg.attr("transform", "translate(0, #{d3.event.translate[1]})")
 		axis.call(yAxis)
@@ -40,13 +40,6 @@ sortVar = (e) ->
 	tp.settings.to = 100
 	redraw()
 
-zoom = () ->
-   if d3.event.scale? and d3.event.scale is 1 then return
-   d = yScale.domain()
-   tp.settings.from = d3.max(d[0]*100, 0);
-   tp.settings.to = d3.min(d[1]*100, 100);
-   redraw()
-
 @params = ((qs) ->
 	qs = qs.substr(1).split("&")
 	params = {}
@@ -54,6 +47,7 @@ zoom = () ->
 	params[p[0]] = decodeURIComponent p[1] for p in sqs
 	params
 )(window.location.search)
+
 @zoomUpdate = (fromto) ->
    if fromto?
    		[tp.settings.from,tp.settings.to] = fromto
@@ -66,8 +60,8 @@ zoom = () ->
 
 showScale = () ->
 	g = d3.select(this)
-	g.selectAll("g.axis").style("display", null)
+	g.selectAll("g.ruler").style("display", null)
 
 hideScale = () ->
 	g = d3.select(this)
-	g.selectAll("g.axis").style("display", "none")
+	g.selectAll("g.ruler").style("display", "none")
