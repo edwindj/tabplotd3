@@ -13,6 +13,7 @@ tpjson <- function(env){
     #print(list(nums=nums, params=params))
     params[nums] <- lapply(params[nums], as.numeric)
     params["decreasing"] <- !params["decreasing"] %in% c("false")
+    params[["plot"]] <- FALSE
     #print(params)
     tp <- do.call(tableplot, params)
     res$write(toJSON(adjust(tp)))
