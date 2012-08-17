@@ -48,10 +48,3 @@ catColumn = (plots, rb, bb, binScale) ->
 		return
 	)
 
-showScale = () ->
-	g = d3.select(this)
-	g.selectAll("g.axis").style("display", null)
-
-hideScale = () ->
-	g = d3.select(this)
-	g.selectAll("g.axis").style("display", "none")
