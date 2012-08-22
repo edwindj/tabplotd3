@@ -1,4 +1,5 @@
 catColumn = (plots, rb, bb, binScale) ->
+	console.log plots
 	plots.each((d,i) -> 
 		
 		cats = d.categories

@@ -65,3 +65,8 @@ showScale = () ->
 hideScale = () ->
 	g = d3.select(this)
 	g.selectAll("g.ruler").style("display", "none")
+
+highlight = (d,i) ->
+	top = d3.selectAll("#top")
+	top.attr("xlink:href", "#num_" + i)
+	console.log(top)

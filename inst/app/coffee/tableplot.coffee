@@ -31,11 +31,11 @@ yZoom = null
 
 	binScale = d3.scale.linear()
 	   .domain([0, data.nBins])
-	   .range([0,height])
+	   .range([10,height-20])
 
 	yScale = d3.scale.linear()
 		.domain([settings.from/100, settings.to/100])
-		.range([0,height])
+		.range([10,height-20])
 		.clamp(true)
 
 
