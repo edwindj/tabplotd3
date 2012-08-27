@@ -4,7 +4,7 @@ tpjson <- function(env){
   res$header('Content-type','application/json')
   
   params <- req$params()
-  print(params)
+  #print(params)
   
   
   if ("dat" %in% names(params)){

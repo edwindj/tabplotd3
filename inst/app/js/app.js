@@ -11,7 +11,6 @@
   };
 
   catColumn = function(plots, rb, bb, binScale) {
-    console.log(plots);
     return plots.each(function(d, i) {
       var bars, cats, colScale, g, h, vals, xAxis, xScale;
       cats = d.categories;
@@ -267,10 +266,8 @@
   };
 
   highlight = function(d, i) {
-    var top;
-    top = d3.selectAll("#top");
-    top.attr("xlink:href", "#num_" + i);
-    return console.log(top);
+    var g;
+    return g = d3.select(this);
   };
 
 }).call(this);
