@@ -1,5 +1,121 @@
+<!DOCTYPE html>
 <html>
-<body>
-Index
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Tableplot '<%= xlit %>'</title>
+    <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+    <link type="text/css" href="css/smoothness/jquery-ui-1.8.17.custom.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
+    
+	  <link type="text/css" href="css/tipsy.css" rel="stylesheet" />
+     <script type="text/javascript" src="js/jquery.tipsy.js"></script>
+	  <script type="text/javascript" src="js/d3.v2.min.js"></script>
+    
+	  <script type="text/javascript" src="js/app.js"></script>
+	<style type="text/css">
+
+body {
+  font: 10px sans-serif;
+}
+
+svg {
+  shape-rendering: crispEdges;
+  overflow: visible;
+}
+
+div.vars {
+  position: relative;
+  height: 10px;
+}
+
+div.label {
+  float: left;
+}
+
+rect.panel {
+   fill: #F1F1F1;
+}
+
+.y.axis line, .y.axis path {
+  fill: none;
+  stroke: #000;
+}
+
+.x.axis line, .x.axis path {
+  fill: none;
+  stroke: #000;
+}
+
+.highlight {
+  font-weight: bold;
+  fill: red;
+}
+
+div.plot {
+   display: inline;
+}
+
+.plot input {
+   width: 5ex;
+}
+
+input {
+   text-align: right;
+   width: 5ex;
+}
+
+</style>
+  </head>
+  <body>
+  <script type="text/javascript">
+
+  $(function(){
+     
+     $("#from_to").slider({
+			range: true,
+			values:[0,100],
+			step: 0.01,
+			min: 0,
+			max: 100,
+			slide: function( event, ui ) {           
+			   tp.settings.from = +ui.values[0];
+				 tp.settings.to = +ui.values[1];
+            zoomUpdate();
+			},
+			stop: function(event, ui){
+             redraw();
+			}
+	 });
+    
+    $("#from").change(function(e){
+       tp.settings.from = +$("#from").val();
+       zoomUpdate();
+       redraw();
+    });
+    
+    $("#to").change(function(e){
+       tp.settings.to = +$("#to").val();
+       zoomUpdate();
+       redraw();
+    });
+    
+    tp.settings.dat = '<%= xlit%>';
+	$.extend(tp.settings, <%= toJSON(req$GET()) %>);
+    d3.json("json?dat=<%= xlit%>", draw);
+
+});
+  
+  </script>
+  <section>
+  <div id="plot">
+     <div class="controls"> 
+	 <h1> <%= xlit %>
+        <input id="from" type="text" value=0 />% - 
+        <input id="to" type="text" value=100 />%
+		</h1>
+	 	<div style="display:none" id="from_to" style="width:80%"/>
+    </div>
+  </div>
+  </section>
+  </body>
 </html>
-</body>
