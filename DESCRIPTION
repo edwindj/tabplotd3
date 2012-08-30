@@ -9,7 +9,7 @@ Description: A tableplot is a visualisation of a (large)
     dataset with a dozen of variables, both numeric and
     categorical. This package contains an interactive version of
     tableplot working in your browser.
-Version: 0.1
+Version: 0.1-1
 URL: http://code.google.com/p/tabplotd3/
 Date: 2012-08-01
 Collate:
