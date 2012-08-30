@@ -1,16 +1,24 @@
-s <- NULL
+.e <- new.env()
 
+# system.file <- function(..., pkg=NULL, package = "base", lib.loc = NULL, mustWork = FALSE){
+#   pkg <- as.package(pkg)
+#   if (package == pkg$package){
+#     file.path(normalizePath(pkg$path, winslash="/"), "inst", ...)
+#   } else {
+#     base::system.file(..., package=package, lib.loc=lib.loc, mustWork=mustWork)
+#   }
+# }
 
-system.file <- function(..., pkg=NULL, package = "base", lib.loc = NULL, mustWork = FALSE){
-  pkg <- as.package(pkg)
-  if (package == pkg$package){
-    file.path(normalizePath(pkg$path, winslash="/"), "inst", ...)
-  } else {
-    base::system.file(..., package=package, lib.loc=lib.loc, mustWork=mustWork)
-  }
-}
-
-#' itabplot
+#' Interactive tableplot
+#' 
+#' \code{itabplot} is an interactive version of \code{\link{tableplot}}. It starts 
+#' your browsers and allows for zooming, panning and sorting the tableplot. This
+#' version can be used for explorative usage, while \code{tableplot} can be used for
+#' publication purposes.
+#' It needs the same parameters as tabplot.
+#' @param x \code{data.frame} or \code{ffdf} object used for plotting.
+#' @param ... parameters that will be given to \code{tableplot}
+#' @seealso \code{\link{tableplot}}
 #' @export
 itabplot <- function(x, ...){
   xlit <- deparse(substitute(x))
@@ -21,10 +29,10 @@ itabplot <- function(x, ...){
   # todo write in the tmp directory and move this to a seperate json function
   #writeLines(toJSON(adjust(tp)), con=jsonf)
   
-  if (is.null(s)){
-    s <<- Rhttpd$new()
+  if (is.null(.e$s)){
+    .e$s <- Rhttpd$new()
   } else { 
-    s$remove(all=TRUE)
+    .e$s$remove(all=TRUE)
   }
   
   app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
@@ -42,7 +50,7 @@ itabplot <- function(x, ...){
                                   , ".*" = Redirect$new("/index.html")
                                 )
                     )
-  s$launch( app=app
+  .e$s$launch( app=app
           , name='tabplotd3'
           ) 
   #s$browse("tabplotd3")

@@ -22,6 +22,6 @@ tpjson <- function(env){
     dmp <- list(params=params)
     res$write(toJSON(dmp))
   }
-  res$finish();
+  res$finish()
 }
 

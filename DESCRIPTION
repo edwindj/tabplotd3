@@ -7,10 +7,11 @@ LazyLoad: yes
 Author: Edwin de Jonge and Martijn Tennekes
 Description: A tableplot is a visualisation of a (large)
     dataset with a dozen of variables, both numeric and
-    categorical. Each column represents a variable and each
+    categorical. This package contains an interactive version of
+    tableplot working in your browser.
 Version: 0.1
 URL: http://code.google.com/p/tabplotd3/
-Date: 2012-03-01
+Date: 2012-08-01
 Collate:
     'itabplot.R'
     'pkg.R'
