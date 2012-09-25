@@ -2,9 +2,9 @@ tabplotd3
 =========
 
 Tabplotd3 is a R package for visualizing large datasets. It complements the 
-(tabplot)[http://cran.r-project.org/package=tabplot] package by providing interacte zooming, sorting and panning.
+[tabplot](http://cran.r-project.org/package=tabplot) package by providing interacte zooming, sorting and panning.
 
-It achieves interactivity by using html and javascript served by (Rook)[http://github.com/jhorner/Rook].
+It achieves interactivity by using html and javascript served by [Rook](http://github.com/jhorner/Rook).
 
 Usage
 =====
