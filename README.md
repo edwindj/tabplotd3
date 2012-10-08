@@ -9,8 +9,6 @@ It achieves interactivity by using html and javascript served by [Rook](http://g
 Install
 =====
 
-Issues
-------
 The latest version of tabplotd3 can be installed using `devtools`.
 
 ```
