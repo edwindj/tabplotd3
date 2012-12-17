@@ -1,13 +1,13 @@
 .e <- new.env()
 
-# system.file <- function(..., pkg=NULL, package = "base", lib.loc = NULL, mustWork = FALSE){
-#   pkg <- as.package(pkg)
-#   if (package == pkg$package){
-#     file.path(normalizePath(pkg$path, winslash="/"), "inst", ...)
-#   } else {
-#     base::system.file(..., package=package, lib.loc=lib.loc, mustWork=mustWork)
-#   }
-# }
+system.file <- function(..., pkg=".", package = "base", lib.loc = NULL, mustWork = FALSE){
+  pkg <- as.package(pkg)
+  if (package == pkg$package){
+    file.path(normalizePath(pkg$path, winslash="/"), "inst", ...)
+  } else {
+    base::system.file(..., package=package, lib.loc=lib.loc, mustWork=mustWork)
+  }
+}
 
 #' Interactive tableplot
 #' 
@@ -22,6 +22,7 @@
 #' @export
 itabplot <- function(x, ...){
   xlit <- deparse(substitute(x))
+  browser()
   tp <- tableplot(x, plot=FALSE, ...)
   args <- list(...)
   
@@ -59,4 +60,4 @@ itabplot <- function(x, ...){
 #### testing
 ### just run this whole file after load_all()
 # irisg <- iris[sample(nrow(iris), 1e4, replace=TRUE),]
-# itabplot(irisg)
+#itabplot(iris)
