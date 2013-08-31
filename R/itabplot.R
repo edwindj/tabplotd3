@@ -12,7 +12,7 @@
 #' Interactive tableplot
 #' 
 #' \code{itabplot} is an interactive version of \code{\link{tableplot}}. It starts 
-#' your browsers and allows for zooming, panning and sorting the tableplot. This
+#' your browser and allows for zooming, panning and sorting the tableplot. This
 #' version can be used for explorative usage, while \code{tableplot} can be used for
 #' publication purposes.
 #' It needs the same parameters as tabplot.
@@ -21,9 +21,11 @@
 #' @seealso \code{\link{tableplot}}
 #' @export
 itabplot <- function(x, ...){
+  
   xlit <- deparse(substitute(x))
   tp <- tableplot(x, plot=FALSE, ...)
   args <- list(...)
+  
   
   #jsonf <- system.file("app/test.json", package='tabplotd3')
   # todo write in the tmp directory and move this to a seperate json function
@@ -35,21 +37,36 @@ itabplot <- function(x, ...){
     .e$s$remove(all=TRUE)
   }
   
-  app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
-                                , root = system.file("app", package="tabplotd3")#"."
-                                )
-                    , Brewery$new( url='.*\\.html$'
-                                 , root= system.file("app", package="tabplotd3")
-                                 , dat=x
-                                 , xlit=xlit
-                                 , args=args
-                                 , ...
-                                 )
-                    , URLMap$new( '^/json' = tpjson
-                                  #, ".*" = Redirect$new("/tableplot.html")
-                                  , ".*" = Redirect$new("/index.html")
-                                )
-                    )
+  app <- Builder$new(
+    URLMap$new( 
+      '^/json' = tpjson,
+      '^/.*\\.html$' = function(env){
+        body <- paste(capture.output(brew(system.file("app/index.html", package="tabplotd3"))),collapse="\n")
+        req <- Request$new(env)
+        res <- Response$new()
+        res$write(body)
+        res$finish()
+      },
+      '^/.*\\.css$' = File$new(root = system.file("app", package="tabplotd3")),
+      '^/.*\\.js$'= File$new(root = system.file("app", package="tabplotd3")),
+      '^/.*\\.png$'= File$new(root = ".")
+    )
+  )
+#   app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
+#                                 , root = system.file("app", package="tabplotd3")#"."
+#                                 )
+#                     , Brewery$new( url='.*\\.html$'
+#                                  , root= system.file("app", package="tabplotd3")
+#                                  , dat=x
+#                                  , xlit=xlit
+#                                  , args=args
+#                                  , ...
+#                                  )
+#                     , URLMap$new( '^/json' = tpjson
+#                                   #, ".*" = Redirect$new("/tableplot.html")
+#                                   , ".*" = Redirect$new("/index.html")
+#                                 )
+#                     )
   .e$s$launch( app=app
           , name='tabplotd3'
           ) 
