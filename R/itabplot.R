@@ -21,7 +21,8 @@
 #' @seealso \code{\link{tableplot}}
 #' @export
 itabplot <- function(x, ...){
-  
+  require(brew)
+  require(httpuv)
   xlit <- deparse(substitute(x))
   tp <- tableplot(x, plot=FALSE, ...)
   args <- list(...)
@@ -31,45 +32,51 @@ itabplot <- function(x, ...){
   # todo write in the tmp directory and move this to a seperate json function
   #writeLines(toJSON(adjust(tp)), con=jsonf)
   
-  if (is.null(.e$s)){
-    .e$s <- Rhttpd$new()
-  } else { 
-    .e$s$remove(all=TRUE)
-  }
+#   if (is.null(.e$s)){
+#     .e$s <- Rhttpd$new()
+#   } else { 
+#     .e$s$remove(all=TRUE)
+#   }
   
-  app <- Builder$new(
-    URLMap$new( 
-      '^/json' = tpjson,
-      '^/.*\\.html$' = function(env){
-        body <- paste(capture.output(brew(system.file("app/index.html", package="tabplotd3"))),collapse="\n")
-        req <- Request$new(env)
-        res <- Response$new()
-        res$write(body)
-        res$finish()
-      },
-      '^/.*\\.css$' = File$new(root = system.file("app", package="tabplotd3")),
-      '^/.*\\.js$'= File$new(root = system.file("app", package="tabplotd3")),
-      '^/.*\\.png$'= File$new(root = ".")
-    )
-  )
-#   app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
-#                                 , root = system.file("app", package="tabplotd3")#"."
-#                                 )
-#                     , Brewery$new( url='.*\\.html$'
-#                                  , root= system.file("app", package="tabplotd3")
-#                                  , dat=x
-#                                  , xlit=xlit
-#                                  , args=args
-#                                  , ...
-#                                  )
-#                     , URLMap$new( '^/json' = tpjson
-#                                   #, ".*" = Redirect$new("/tableplot.html")
-#                                   , ".*" = Redirect$new("/index.html")
-#                                 )
-#                     )
-  .e$s$launch( app=app
-          , name='tabplotd3'
-          ) 
+#   app <- Builder$new(
+#     URLMap$new( 
+#       '^/json' = tpjson,
+#       '^/css/' = File$new(root = system.file("app", package="tabplotd3")),
+#       '^/js/'= File$new(root = system.file("app", package="tabplotd3")),
+#       '^/img/'= File$new(root = "."),
+#       '^*' = function(env){
+#         req <- Request$new(env)
+#         body <- paste(capture.output(brew(system.file("app/index.html", package="tabplotd3"))),collapse="\n")
+#         res <- Response$new()
+#         res$write(body)
+#         res$finish()
+#       }
+#     )
+#   )
+  app <- Builder$new( Static$new( urls = c('/css/','/img/','/js/','/.+\\.json$') #, "/.*\\.html$")
+                                , root = system.file("app", package="tabplotd3")#"."
+                                )
+                    , Brewery$new( url='.*\\.html$'
+                                 , root= system.file("app", package="tabplotd3")
+                                 , dat=x
+                                 , xlit=xlit
+                                 , args=args
+                                 , ...
+                                 )
+                    , URLMap$new( '^/json' = tpjson
+                                  #, ".*" = Redirect$new("/tableplot.html")
+                                  , ".*" = function(env){
+                                             req <- Request$new(env)
+                                             body <- paste(capture.output(brew(system.file("app/index.html", package="tabplotd3"))),collapse="\n")
+                                             res <- Response$new()
+                                             res$write(body)
+                                             res$finish()
+                                           }
+                                )
+                    )
+
+  browseURL("http://localhost:8100")
+  id <- runServer("0.0.0.0", 8100, list(call=app$call, onWSOpen=function(ws){}, onHeaders=function(x){}))
   #s$browse("tabplotd3")
 }
 

@@ -100,7 +100,7 @@ input {
     });
     
     tp.settings.dat = '<%= xlit%>';
-	$.extend(tp.settings, <%= toJSON(req$GET()) %>);
+	  $.extend(tp.settings, <%= toJSON(req$GET()) %>);
     d3.json("json?dat=<%= xlit%>", draw);
 
 });
