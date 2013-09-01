@@ -20,4 +20,5 @@ Collate:
 Depends:
     Rook,
     RJSONIO,
-    tabplot
+    tabplot,
+    httpuv
