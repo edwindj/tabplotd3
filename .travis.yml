@@ -19,10 +19,7 @@ install:
   - R --version
   - R -e '.libPaths(); sessionInfo()'
   - Rscript -e 'install.packages("tabplot", dep = TRUE, repos = "http://cran.r-project.org")'
-  - Rscript -e 'install.packages("httpuv", dep = TRUE, repos = "http://cran.r-project.org")'
   - Rscript -e 'install.packages("Rook", dep = TRUE, repos = "http://cran.r-project.org")'
-  - Rscript -e 'install.packages("RJSONIO", dep = TRUE, repos = "http://cran.r-project.org")'
-  - Rscript -e 'install.packages("tabplotd3", dep = TRUE, repos = "http://cran.r-project.org")'
 
 # run tests
 script:
