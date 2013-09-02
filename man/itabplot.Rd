@@ -13,7 +13,7 @@
 }
 \description{
   \code{itabplot} is an interactive version of
-  \code{\link{tableplot}}. It starts your browsers and
+  \code{\link{tableplot}}. It starts your browser and
   allows for zooming, panning and sorting the tableplot.
   This version can be used for explorative usage, while
   \code{tableplot} can be used for publication purposes. It
