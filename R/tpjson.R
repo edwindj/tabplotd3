@@ -1,4 +1,5 @@
 #' @importFrom RJSONIO toJSON
+#' @importFrom tabplot tableplot
 tpjson <- function(env){
   req <- Request$new(env)
   res <- Response$new()

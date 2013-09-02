@@ -23,6 +23,7 @@
 #' @importFrom httpuv runServer
 #' @import Rook
 #' @importFrom brew brew
+#' @importFrom tabplot tableplot
 itabplot <- function(x, ...){
   xlit <- deparse(substitute(x))
   tp <- tableplot(x, plot=FALSE, ...)

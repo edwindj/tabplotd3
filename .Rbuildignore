@@ -4,3 +4,6 @@
 experiment
 .gitignore
 ^.*\.Rproj$
+\.git.*
+.travis.yml
+Makefile
