@@ -20,6 +20,7 @@ Collate:
 Depends:
     tabplot
 Imports:
+    tabplot,
     httpuv,
     Rook,
     brew,
