@@ -1,3 +1,4 @@
+#' @importFrom RJSONIO toJSON
 tpjson <- function(env){
   req <- Request$new(env)
   res <- Response$new()
