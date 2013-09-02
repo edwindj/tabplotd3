@@ -18,8 +18,8 @@ install:
   - "[ ! -d ~/R ] && mkdir ~/R"
   - R --version
   - R -e '.libPaths(); sessionInfo()'
-  - Rscript -e 'install.packages("tabplot", dep = TRUE, repos = "http://cran.r-project.org")'
-  - Rscript -e 'install.packages("Rook", dep = TRUE, repos = "http://cran.r-project.org")'
+  - Rscript --no-init-file -e 'install.packages("tabplot", dep=TRUE, repos = "http://cran.r-project.org")'
+  - Rscript --no-init-file -e 'install.packages("Rook", dep=TRUE, repos = "http://cran.r-project.org")'
 
 # run tests
 script:
